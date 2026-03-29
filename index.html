@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard IKP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .sidebar-active { 
+            background-color: #f8fafc; 
+            color: #2d4a56 !important; 
+            border-radius: 9999px 0 0 9999px; 
+            font-weight: bold;
+        }
+
+        /* Mengatur tinggi iframe agar tetap full screen dikurangi header mobile jika ada */
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Transisi sidebar mobile */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans overflow-hidden">
+
+    <header class="lg:hidden bg-[#2d4a56] text-white p-4 flex justify-between items-center shadow-md">
+        <button onclick="toggleSidebar()" class="text-2xl focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="font-bold text-sm tracking-widest uppercase">Dashboard IKP</h1>
+        <div class="w-8"></div> </header>
+
+    <div class="flex h-screen relative">
+        
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0">
+            <div class="p-6 flex flex-col items-center">
+                <div class="w-16 h-16 bg-gray-400 rounded-full mb-2 overflow-hidden border-2 border-white/20">
+                    <img src="https://ui-avatars.com/api/?name=Didik+Handoko&background=random" alt="Profile">
+                </div>
+                <h3 class="font-semibold text-sm">Dashboard</h3>
+                <p class="text-xs text-gray-400">Bidang IKP</p>
+                <button onclick="toggleSidebar()" class="lg:hidden absolute top-4 right-4 text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 mt-4 ml-4 overflow-y-auto">
+                <ul class="space-y-2">
+                    <li>
+                        <button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-4 lg:p-3 transition text-sm">
+                            <i class="fas fa-th-large mr-3 w-5"></i> Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('inventory', 'https://script.google.com/macros/s/AKfycbwzjR3Hfu4d_orDuBmH0WayQK7I_zEna3GbC44P5yPxuVpUVg3sx81LvKMGKbEd73aL/exec')" id="btn-inventory" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
+                            <i class="fas fa-box mr-3 w-5"></i> Pustaka
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('orders', 'https://script.google.com/macros/s/AKfycbylGzS4xWWvs6pLPIs2T5hMVSe1noCLQEpXo2T1Z79XfaVBH6_OGBo2TvYUwiM-ZqJD/exec')" id="btn-orders" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
+                            <i class="fas fa-layer-group mr-3 w-5"></i> Medsos
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('purchase', 'https://script.google.com/macros/s/AKfycbzS5KiI8eJ6kW-SV8jjyIqTXCMSc20El3NEg1yx2dyoMNiq1dRlRV9wuxxGltiWhppK/exec')" id="btn-purchase" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
+                            <i class="fas fa-shopping-cart mr-3 w-5"></i> Pers Rilis
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('reporting', 'https://script.google.com/macros/s/AKfycbzNy0C25RI-v0eif-wT22-nwh9BJ3F2qPxbM4OmNCXsjv3qulG0uMprDzbpOCb_Dwsv/exec')" id="btn-reporting" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
+                            <i class="fas fa-chart-line mr-3 w-5"></i> Berita
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="p-6 border-t border-white/10">
+                <button class="flex items-center text-sm text-gray-400 hover:text-white transition">
+                    <i class="fas fa-sign-out-alt mr-3"></i> Didik Handoko
+                </button>
+            </div>
+        </aside>
+
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black opacity-50 z-40 hidden lg:hidden"></div>
+
+        <main class="flex-1 flex flex-col bg-white overflow-hidden relative">
+            
+            <div id="view-dashboard" class="p-6 lg:p-10 overflow-y-auto h-full">
+                <h1 class="text-xl lg:text-2xl font-bold text-slate-800 mb-6 lg:mb-8">IKP Management Dashboard</h1>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8 lg:mb-10">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center">
+                        <div class="bg-blue-50 p-3 rounded-lg mr-4 text-blue-600"><i class="fas fa-box"></i></div>
+                        <div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Total Products</p><h4 class="text-xl font-bold">5,483</h4></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center">
+                        <div class="bg-emerald-50 p-3 rounded-lg mr-4 text-emerald-600"><i class="fas fa-shopping-bag"></i></div>
+                        <div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Orders</p><h4 class="text-xl font-bold">2,859</h4></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center">
+                        <div class="bg-purple-50 p-3 rounded-lg mr-4 text-purple-600"><i class="fas fa-warehouse"></i></div>
+                        <div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Total Stock</p><h4 class="text-xl font-bold">5,483</h4></div>
+                    </div>
+                    <div class="bg-orange-50 p-5 rounded-xl border border-orange-100 shadow-sm flex items-center">
+                        <div class="bg-orange-100 p-3 rounded-lg mr-4 text-orange-600"><i class="fas fa-exclamation-circle"></i></div>
+                        <div><p class="text-[10px] text-orange-600 uppercase font-bold tracking-wider">Out of Stock</p><h4 class="text-xl font-bold text-orange-700">38</h4></div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-dashed border-slate-300 rounded-2xl h-64 lg:h-96 flex items-center justify-center">
+                    <p class="text-slate-400 text-sm p-4 text-center italic">Grafik statistik akan muncul di sini secara otomatis menyesuaikan lebar layar.</p>
+                </div>
+            </div>
+
+            <div id="view-iframe" class="hidden h-full w-full">
+                <iframe id="app-frame" class="w-full h-full border-none" src="" allow="autoplay; clipboard-write; encrypted-media; fullscreen;"></iframe>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Fungsi Toggle Sidebar Mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Fungsi Ganti Halaman
+        function showPage(pageId, url = '') {
+            const dashboardView = document.getElementById('view-dashboard');
+            const iframeView = document.getElementById('view-iframe');
+            const iframe = document.getElementById('app-frame');
+
+            // Reset menu aktif
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('sidebar-active');
+                btn.classList.add('text-gray-300', 'hover:bg-white/10');
+            });
+
+            // Set menu aktif
+            const activeBtn = document.getElementById('btn-' + pageId);
+            activeBtn.classList.add('sidebar-active');
+            activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10');
+
+            // Logic Tampilan
+            if (pageId === 'dashboard') {
+                dashboardView.classList.remove('hidden');
+                iframeView.classList.add('hidden');
+                iframe.src = "";
+            } else {
+                dashboardView.classList.add('hidden');
+                iframeView.classList.remove('hidden');
+                if (iframe.src !== url) iframe.src = url;
+            }
+
+            // Tutup sidebar setelah pilih menu di mobile
+            if (window.innerWidth < 1024) {
+                toggleSidebar();
+            }
+        }
+    </script>
+</body>
+</html>
