@@ -3,10 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard IKP</title>
+    <title>IKP by Didikhand</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
     <style>
+        #sidebar {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+            overflow-x: hidden;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 1024px) {
+            #sidebar:not(:hover) { width: 70px; }
+            #sidebar:not(:hover) .nav-text, #sidebar:not(:hover) .profile-detail { opacity: 0; pointer-events: none; }
+            #sidebar:hover { width: 260px; }
+        }
+
+        .nav-text, .profile-detail { transition: opacity 0.2s ease; }
+
         .sidebar-active { 
             background-color: #f8fafc; 
             color: #2d4a56 !important; 
@@ -14,158 +30,203 @@
             font-weight: bold;
         }
 
-        /* Mengatur tinggi iframe agar tetap full screen dikurangi header mobile jika ada */
-        .iframe-container {
-            width: 100%;
-            height: 100%;
-            border: none;
+        #loading-overlay {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.4s ease;
         }
-        /* Transisi sidebar mobile */
-        #sidebar {
-            transition: transform 0.3s ease-in-out;
-        }
+        .retro-font { font-family: 'Press Start 2P', cursive; }
+        .mission-start { color: #ff0000; font-size: 1.5rem; text-shadow: 3px 3px #fff; margin-bottom: 25px; animation: pulse 0.15s infinite; }
+        .bar-container { width: 320px; height: 24px; border: 4px solid #fff; padding: 3px; background: #222; }
+        .bar-fill { height: 100%; background: linear-gradient(to bottom, #ffcc00, #ff6600); width: 0%; transition: width 0.2s; }
+        
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .page-content { display: none; width: 100%; height: 100%; }
+        .page-content.active { display: block; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .btn-sync { color: #ffcc00 !important; border: 1px dashed #ffcc0033; margin-top: 10px; }
+        .btn-sync:hover { background: #ffcc0011 !important; }
+        .animate-spin-slow { animation: spin 3s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-slate-100 font-sans overflow-hidden">
 
-    <header class="lg:hidden bg-[#2d4a56] text-white p-4 flex justify-between items-center shadow-md">
-        <button onclick="toggleSidebar()" class="text-2xl focus:outline-none">
-            <i class="fas fa-bars"></i>
-        </button>
-        <h1 class="font-bold text-sm tracking-widest uppercase">Dashboard IKP</h1>
-        <div class="w-8"></div> </header>
+    <div id="loading-overlay">
+        <h2 id="loading-title" class="retro-font mission-start">MISSION START !</h2>
+        <div class="bar-container"><div id="progress-fill" class="bar-fill"></div></div>
+        <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 tracking-tighter text-center leading-relaxed max-w-xs uppercase">DIDIKHAND IS INITIALIZED ALL SYSTEMS...</p>
+    </div>
+
+    <header class="lg:hidden bg-[#2d4a56] text-white p-4 flex justify-between items-center shadow-md z-50 relative">
+        <button onclick="toggleSidebarMobile()" class="text-2xl"><i class="fas fa-bars"></i></button>
+        <span class="font-bold text-sm tracking-widest">INVENTORY</span>
+        <div class="w-8"></div>
+    </header>
 
     <div class="flex h-screen relative">
-        
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0">
-            <div class="p-6 flex flex-col items-center">
-                <div class="w-16 h-16 bg-gray-400 rounded-full mb-2 overflow-hidden border-2 border-white/20">
-                    <img src="https://ui-avatars.com/api/?name=Didik+Handoko&background=random" alt="Profile">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0 shadow-xl">
+            <div class="p-4 flex items-center mt-2">
+                <div class="min-w-[40px]">
+                    <img src="https://ui-avatars.com/api/?name=I&background=e0e7ff&color=000" class="w-10 h-10 rounded-full border-2 border-white/20">
                 </div>
-                <h3 class="font-semibold text-sm">Dashboard</h3>
-                <p class="text-xs text-gray-400">Bidang IKP</p>
-                <button onclick="toggleSidebar()" class="lg:hidden absolute top-4 right-4 text-xl">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div class="ml-4 profile-detail">
+                    <h3 class="font-semibold text-sm truncate w-32 text-white">MONITORING</h3>
+                    <p class="text-[10px] text-yellow-500 font-bold uppercase">BIDANG IKP</p>
+                </div>
             </div>
-
-            <nav class="flex-1 mt-4 ml-4 overflow-y-auto">
+            <hr class="border-white/10 my-4">
+            <nav class="flex-1 ml-3 overflow-y-auto overflow-x-hidden">
                 <ul class="space-y-2">
-                    <li>
-                        <button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-4 lg:p-3 transition text-sm">
-                            <i class="fas fa-th-large mr-3 w-5"></i> Dashboard
-                        </button>
-                    </li>
-                    <li>
-                        <button onclick="showPage('inventory', 'https://script.google.com/macros/s/AKfycbwzjR3Hfu4d_orDuBmH0WayQK7I_zEna3GbC44P5yPxuVpUVg3sx81LvKMGKbEd73aL/exec')" id="btn-inventory" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
-                            <i class="fas fa-box mr-3 w-5"></i> Pustaka
-                        </button>
-                    </li>
-                    <li>
-                        <button onclick="showPage('orders', 'https://script.google.com/macros/s/AKfycbylGzS4xWWvs6pLPIs2T5hMVSe1noCLQEpXo2T1Z79XfaVBH6_OGBo2TvYUwiM-ZqJD/exec')" id="btn-orders" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
-                            <i class="fas fa-layer-group mr-3 w-5"></i> Medsos
-                        </button>
-                    </li>
-                    <li>
-                        <button onclick="showPage('purchase', 'https://script.google.com/macros/s/AKfycbzS5KiI8eJ6kW-SV8jjyIqTXCMSc20El3NEg1yx2dyoMNiq1dRlRV9wuxxGltiWhppK/exec')" id="btn-purchase" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
-                            <i class="fas fa-shopping-cart mr-3 w-5"></i> Pers Rilis
-                        </button>
-                    </li>
-                    <li>
-                        <button onclick="showPage('reporting', 'https://script.google.com/macros/s/AKfycbzNy0C25RI-v0eif-wT22-nwh9BJ3F2qPxbM4OmNCXsjv3qulG0uMprDzbpOCb_Dwsv/exec')" id="btn-reporting" class="w-full flex items-center p-4 lg:p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
-                            <i class="fas fa-chart-line mr-3 w-5"></i> Berita
-                        </button>
-                    </li>
+                    <li><button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-3 transition text-sm"><i class="fas fa-th-large min-w-[30px] text-center"></i><span class="ml-4 nav-text">Dashboard</span></button></li>
+                    <li><button onclick="showPage('inventory')" id="btn-inventory" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-box min-w-[30px] text-center"></i><span class="ml-4 nav-text">Pustaka</span></button></li>
+                    <li><button onclick="showPage('orders')" id="btn-orders" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-layer-group min-w-[30px] text-center"></i><span class="ml-4 nav-text">Siaran Pers</span></button></li>
+                    <li><button onclick="showPage('purchase')" id="btn-purchase" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-shopping-cart min-w-[30px] text-center"></i><span class="ml-4 nav-text">Media Sosial</span></button></li>
+                    <li><button onclick="showPage('reporting')" id="btn-reporting" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-chart-line min-w-[30px] text-center"></i><span class="ml-4 nav-text">Publikasi</span></button></li>
+                    <li><button onclick="syncAllSystems()" class="btn-sync w-full flex items-center p-3 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-sync-alt min-w-[30px]"></i><span class="ml-4 nav-text">Sinkronisasi</span></button></li>
                 </ul>
             </nav>
-
-            <div class="p-6 border-t border-white/10">
-                <button class="flex items-center text-sm text-gray-400 hover:text-white transition">
-                    <i class="fas fa-sign-out-alt mr-3"></i> Didik Handoko
-                </button>
-            </div>
         </aside>
 
-        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black opacity-50 z-40 hidden lg:hidden"></div>
+        <div id="overlay" onclick="toggleSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
 
         <main class="flex-1 flex flex-col bg-white overflow-hidden relative">
-            
-            <div id="view-dashboard" class="p-6 lg:p-10 overflow-y-auto h-full">
-                <h1 class="text-xl lg:text-2xl font-bold text-slate-800 mb-6 lg:mb-8">IKP Management Dashboard</h1>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8 lg:mb-10">
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center">
-                        <div class="bg-blue-50 p-3 rounded-lg mr-4 text-blue-600"><i class="fas fa-box"></i></div>
-                        <div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Total Products</p><h4 class="text-xl font-bold">5,483</h4></div>
+            <div id="view-dashboard" class="page-content active p-6 lg:p-10 overflow-y-auto">
+                <div class="max-w-7xl mx-auto">
+                    <h1 class="text-2xl font-bold text-slate-800 mb-8 tracking-tight">Agregat Data Kinerja</h1>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Jumlah Siaran Pers</p><h4 class="text-3xl font-black text-slate-700 tracking-tighter">5,483</h4></div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Jumlah Postingan</p><h4 class="text-3xl font-black text-slate-700 tracking-tighter">2,859</h4></div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Capaian Target</p><h4 class="text-3xl font-black text-slate-700 tracking-tighter">92%</h4></div>
+                        <div class="bg-red-50 p-6 rounded-2xl border border-red-100 shadow-sm"><p class="text-[10px] text-red-400 font-bold uppercase mb-1">Jumlah Peliputan</p><h4 class="text-3xl font-black text-red-600 tracking-tighter">38</h4></div>
                     </div>
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center">
-                        <div class="bg-emerald-50 p-3 rounded-lg mr-4 text-emerald-600"><i class="fas fa-shopping-bag"></i></div>
-                        <div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Orders</p><h4 class="text-xl font-bold">2,859</h4></div>
-                    </div>
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center">
-                        <div class="bg-purple-50 p-3 rounded-lg mr-4 text-purple-600"><i class="fas fa-warehouse"></i></div>
-                        <div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Total Stock</p><h4 class="text-xl font-bold">5,483</h4></div>
-                    </div>
-                    <div class="bg-orange-50 p-5 rounded-xl border border-orange-100 shadow-sm flex items-center">
-                        <div class="bg-orange-100 p-3 rounded-lg mr-4 text-orange-600"><i class="fas fa-exclamation-circle"></i></div>
-                        <div><p class="text-[10px] text-orange-600 uppercase font-bold tracking-wider">Out of Stock</p><h4 class="text-xl font-bold text-orange-700">38</h4></div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-50 border border-dashed border-slate-300 rounded-2xl h-64 lg:h-96 flex items-center justify-center">
-                    <p class="text-slate-400 text-sm p-4 text-center italic">Grafik statistik akan muncul di sini secara otomatis menyesuaikan lebar layar.</p>
                 </div>
             </div>
 
-            <div id="view-iframe" class="hidden h-full w-full">
-                <iframe id="app-frame" class="w-full h-full border-none" src="" allow="autoplay; clipboard-write; encrypted-media; fullscreen;"></iframe>
-            </div>
-
+            <div id="view-inventory" class="page-content"><iframe id="frame-inventory"></iframe></div>
+            <div id="view-orders" class="page-content"><iframe id="frame-orders"></iframe></div>
+            <div id="view-purchase" class="page-content"><iframe id="frame-purchase"></iframe></div>
+            <div id="view-reporting" class="page-content"><iframe id="frame-reporting"></iframe></div>
         </main>
     </div>
 
     <script>
-        // Fungsi Toggle Sidebar Mobile
-        function toggleSidebar() {
+        const appUrls = {
+            inventory: 'https://script.google.com/macros/s/AKfycbwzjR3Hfu4d_orDuBmH0WayQK7I_zEna3GbC44P5yPxuVpUVg3sx81LvKMGKbEd73aL/exec',
+            orders: 'https://script.google.com/macros/s/AKfycbylGzS4xWWvs6pLPIs2T5hMVSe1noCLQEpXo2T1Z79XfaVBH6_OGBo2TvYUwiM-ZqJD/exec',
+            purchase: 'https://script.google.com/macros/s/AKfycbzS5KiI8eJ6kW-SV8jjyIqTXCMSc20El3NEg1yx2dyoMNiq1dRlRV9wuxxGltiWhppK/exec',
+            reporting: 'https://script.google.com/macros/s/AKfycbzNy0C25RI-v0eif-wT22-nwh9BJ3F2qPxbM4OmNCXsjv3qulG0uMprDzbpOCb_Dwsv/exec'
+        };
+
+        function runLoading(customMsg, callback, duration = 80) {
+            const overlay = document.getElementById('loading-overlay');
+            const bar = document.getElementById('progress-fill');
+            const status = document.getElementById('loading-status');
+            
+            overlay.style.display = 'flex';
+            overlay.style.opacity = '1';
+            status.innerText = customMsg || "RECOVERING DATA...";
+            bar.style.width = '0%';
+
+            let p = 0;
+            const inv = setInterval(() => {
+                p += Math.floor(Math.random() * 15) + 2;
+                if (p >= 100) p = 100;
+                bar.style.width = p + '%';
+                
+                if (p >= 100) {
+                    clearInterval(inv);
+                    if (callback) callback();
+                    else hideLoading();
+                }
+            }, duration);
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.display = 'none', 400);
+        }
+
+        // Fungsi Sinkronisasi (Bisa dipanggil manual atau otomatis)
+        function syncAllSystems(isAuto = false) {
+            const title = document.getElementById('loading-title');
+            const status = document.getElementById('loading-status');
+            
+            title.innerText = isAuto ? "MISSION START !" : "HEAVY SYNC !";
+            
+            runLoading(isAuto ? "WARMING UP ALL UNITS..." : "SYNCHRONIZING ALL UNITS...", () => {
+                Object.keys(appUrls).forEach(key => {
+                    const frame = document.getElementById('frame-' + key);
+                    // Langsung isi SRC untuk semua iframe
+                    frame.src = appUrls[key];
+                });
+
+                status.innerText = "ALL SYSTEMS READY! MISSION BEGINS";
+                status.classList.replace('text-yellow-500', 'text-green-400');
+
+                setTimeout(() => {
+                    hideLoading();
+                    // Kembalikan status ke default setelah loading hilang
+                    setTimeout(() => {
+                        title.innerText = "MISSION START !";
+                        status.innerText = "INITIALIZING...";
+                        status.classList.replace('text-green-400', 'text-yellow-500');
+                    }, 500);
+                }, 1200); 
+            }, 120); // Sedikit lebih lambat agar proses load iframe punya waktu bernapas
+        }
+
+        function showPage(pageId) {
+            if (pageId === 'dashboard') {
+                switchView(pageId);
+                return;
+            }
+
+            const targetFrame = document.getElementById('frame-' + pageId);
+            const isLoaded = (targetFrame && targetFrame.src !== "" && targetFrame.src !== window.location.href);
+
+            if (!isLoaded) {
+                runLoading("PREPARING UNIT: " + pageId.toUpperCase(), () => {
+                    targetFrame.src = appUrls[pageId];
+                    switchView(pageId);
+                    hideLoading();
+                });
+            } else {
+                switchView(pageId);
+            }
+        }
+
+        function switchView(pageId) {
+            document.querySelectorAll('.page-content').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + pageId).classList.add('active');
+            
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('sidebar-active');
+                btn.classList.add('text-gray-300', 'hover:bg-white/10');
+            });
+            
+            const activeBtn = document.getElementById('btn-' + pageId);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active');
+                activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10');
+            }
+            if (window.innerWidth < 1024) toggleSidebarMobile();
+        }
+
+        function toggleSidebarMobile() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         }
 
-        // Fungsi Ganti Halaman
-        function showPage(pageId, url = '') {
-            const dashboardView = document.getElementById('view-dashboard');
-            const iframeView = document.getElementById('view-iframe');
-            const iframe = document.getElementById('app-frame');
-
-            // Reset menu aktif
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('sidebar-active');
-                btn.classList.add('text-gray-300', 'hover:bg-white/10');
-            });
-
-            // Set menu aktif
-            const activeBtn = document.getElementById('btn-' + pageId);
-            activeBtn.classList.add('sidebar-active');
-            activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10');
-
-            // Logic Tampilan
-            if (pageId === 'dashboard') {
-                dashboardView.classList.remove('hidden');
-                iframeView.classList.add('hidden');
-                iframe.src = "";
-            } else {
-                dashboardView.classList.add('hidden');
-                iframeView.classList.remove('hidden');
-                if (iframe.src !== url) iframe.src = url;
-            }
-
-            // Tutup sidebar setelah pilih menu di mobile
-            if (window.innerWidth < 1024) {
-                toggleSidebar();
-            }
-        }
+        // INI BAGIAN PENTING: Jalankan sinkronisasi otomatis saat pertama kali dibuka
+        window.onload = () => {
+            syncAllSystems(true); 
+        };
     </script>
 </body>
 </html>
