@@ -17,11 +17,11 @@
 
         @media (min-width: 1024px) {
             #sidebar:not(:hover) { width: 70px; }
-            #sidebar:not(:hover) .nav-text, #sidebar:not(:hover) .profile-detail { opacity: 0; pointer-events: none; }
+            #sidebar:not(:hover) .nav-text, #sidebar:not(:hover) .profile-detail, #sidebar:not(:hover) .chevron { opacity: 0; pointer-events: none; }
             #sidebar:hover { width: 260px; }
         }
 
-        .nav-text, .profile-detail { transition: opacity 0.2s ease; }
+        .nav-text, .profile-detail, .chevron { transition: opacity 0.2s ease; }
 
         .sidebar-active { 
             background-color: #f8fafc; 
@@ -46,10 +46,19 @@
         .page-content.active { display: block; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        .btn-sync { color: #ffcc00 !important; border: 1px dashed #ffcc0033; margin-top: 10px; }
-        .btn-sync:hover { background: #ffcc0011 !important; }
-        .animate-spin-slow { animation: spin 3s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* Submenu Styling */
+        .submenu { 
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, background 0.3s ease;
+            background: rgba(0,0,0,0.1); 
+        }
+        .submenu.show { max-height: 200px; }
+        .chevron { transition: transform 0.3s ease; }
+        .rotate-180 { transform: rotate(180deg); }
+
+        .portal-card { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
+        .portal-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-color: #2d4a56; }
     </style>
 </head>
 <body class="bg-slate-100 font-sans overflow-hidden">
@@ -57,14 +66,8 @@
     <div id="loading-overlay">
         <h2 id="loading-title" class="retro-font mission-start">MISSION START !</h2>
         <div class="bar-container"><div id="progress-fill" class="bar-fill"></div></div>
-        <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 tracking-tighter text-center leading-relaxed max-w-xs uppercase">DIDIKHAND IS INITIALIZED ALL SYSTEMS...</p>
+        <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 tracking-tighter text-center leading-relaxed max-w-xs uppercase">DIDIKHAND IS INITIALIZING ALL SYSTEMS...</p>
     </div>
-
-    <header class="lg:hidden bg-[#2d4a56] text-white p-4 flex justify-between items-center shadow-md z-50 relative">
-        <button onclick="toggleSidebarMobile()" class="text-2xl"><i class="fas fa-bars"></i></button>
-        <span class="font-bold text-sm tracking-widest">INVENTORY</span>
-        <div class="w-8"></div>
-    </header>
 
     <div class="flex h-screen relative">
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0 shadow-xl">
@@ -81,16 +84,27 @@
             <nav class="flex-1 ml-3 overflow-y-auto overflow-x-hidden">
                 <ul class="space-y-2">
                     <li><button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-3 transition text-sm"><i class="fas fa-th-large min-w-[30px] text-center"></i><span class="ml-4 nav-text">Dashboard</span></button></li>
+                    <li><button onclick="showPage('portal')" id="btn-portal" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-door-open min-w-[30px] text-center"></i><span class="ml-4 nav-text">Portal</span></button></li>
+                    
+                    <li>
+                        <button onclick="toggleSubmenu('sdm-sub')" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
+                            <i class="fas fa-users-cog min-w-[30px] text-center"></i>
+                            <span class="ml-4 nav-text flex-1">Monev SDM</span>
+                            <i id="sdm-chevron" class="fas fa-chevron-down text-[10px] mr-4 chevron"></i>
+                        </button>
+                        <ul id="sdm-sub" class="submenu pl-8 mt-1 space-y-1">
+                            <li><button onclick="showPage('sdm_internal')" id="btn-sdm_internal" class="w-full text-left p-2 text-xs text-gray-400 hover:text-white transition rounded-l-full">• Internal</button></li>
+                            <li><button onclick="showPage('sdm_ahli')" id="btn-sdm_ahli" class="w-full text-left p-2 text-xs text-gray-400 hover:text-white transition rounded-l-full">• Tenaga Ahli</button></li>
+                        </ul>
+                    </li>
+
                     <li><button onclick="showPage('inventory')" id="btn-inventory" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-box min-w-[30px] text-center"></i><span class="ml-4 nav-text">Pustaka</span></button></li>
                     <li><button onclick="showPage('orders')" id="btn-orders" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-layer-group min-w-[30px] text-center"></i><span class="ml-4 nav-text">Siaran Pers</span></button></li>
                     <li><button onclick="showPage('purchase')" id="btn-purchase" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-shopping-cart min-w-[30px] text-center"></i><span class="ml-4 nav-text">Media Sosial</span></button></li>
                     <li><button onclick="showPage('reporting')" id="btn-reporting" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-chart-line min-w-[30px] text-center"></i><span class="ml-4 nav-text">Publikasi</span></button></li>
-                    <li><button onclick="syncAllSystems()" class="btn-sync w-full flex items-center p-3 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-sync-alt min-w-[30px]"></i><span class="ml-4 nav-text">Sinkronisasi</span></button></li>
                 </ul>
             </nav>
         </aside>
-
-        <div id="overlay" onclick="toggleSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
 
         <main class="flex-1 flex flex-col bg-white overflow-hidden relative">
             <div id="view-dashboard" class="page-content active p-6 lg:p-10 overflow-y-auto">
@@ -105,6 +119,52 @@
                 </div>
             </div>
 
+            <div id="view-portal" class="page-content p-6 lg:p-10 overflow-y-auto bg-slate-50">
+                <div class="max-w-5xl mx-auto">
+                    <h1 class="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Portal Input Data</h1>
+                    <p class="text-slate-500 mb-8 text-sm">Pilih layanan formulir di bawah ini untuk memulai input data kinerja.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
+                            <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-file-alt text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800 mb-2">Dokumen</h3>
+                            <p class="text-slate-500 text-sm mb-6">Input data administrasi dan dokumen IKP</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                        </div>
+
+                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
+                            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-newspaper text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800 mb-2">Pers Rilis</h3>
+                            <p class="text-slate-500 text-sm mb-6">Input naskah siaran pers dan berita resmi.</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                        </div>
+
+                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
+                            <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-broadcast-tower text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800 mb-2">Diseminasi</h3>
+                            <p class="text-slate-500 text-sm mb-6">Input data penyebarluasan informasi publik.</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                        </div>
+
+                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
+                            <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-bullhorn text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800 mb-2">Publikasi</h3>
+                            <p class="text-slate-500 text-sm mb-6">Input data publikasi media massa.</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="view-sdm_internal" class="page-content"><iframe id="frame-sdm_internal"></iframe></div>
+            <div id="view-sdm_ahli" class="page-content"><iframe id="frame-sdm_ahli"></iframe></div>
             <div id="view-inventory" class="page-content"><iframe id="frame-inventory"></iframe></div>
             <div id="view-orders" class="page-content"><iframe id="frame-orders"></iframe></div>
             <div id="view-purchase" class="page-content"><iframe id="frame-purchase"></iframe></div>
@@ -114,89 +174,60 @@
 
     <script>
         const appUrls = {
+            sdm_internal: 'https://script.google.com/macros/s/AKfycbzhSzFtLpDnANANg6cneuhmDwnf8L74CuQI3Hb240ZKNVMni8H8KJuwNqqB0gr8HHis/exec',
+            sdm_ahli: 'https://script.google.com/macros/s/AKfycbwgOq9EVsnXynjp_iJczZ7-0slTfkeW6nzgGxeE87IuZmFz8QUtPCOV9mLZTu2_ecps/exec',
             inventory: 'https://script.google.com/macros/s/AKfycbwzjR3Hfu4d_orDuBmH0WayQK7I_zEna3GbC44P5yPxuVpUVg3sx81LvKMGKbEd73aL/exec',
             orders: 'https://script.google.com/macros/s/AKfycbylGzS4xWWvs6pLPIs2T5hMVSe1noCLQEpXo2T1Z79XfaVBH6_OGBo2TvYUwiM-ZqJD/exec',
             purchase: 'https://script.google.com/macros/s/AKfycbzS5KiI8eJ6kW-SV8jjyIqTXCMSc20El3NEg1yx2dyoMNiq1dRlRV9wuxxGltiWhppK/exec',
             reporting: 'https://script.google.com/macros/s/AKfycbzNy0C25RI-v0eif-wT22-nwh9BJ3F2qPxbM4OmNCXsjv3qulG0uMprDzbpOCb_Dwsv/exec'
         };
 
-        function runLoading(customMsg, callback, duration = 80) {
+        function toggleSubmenu(id, forceClose = false) {
+            const sub = document.getElementById(id);
+            const chev = document.getElementById('sdm-chevron');
+            if (forceClose) {
+                sub.classList.remove('show');
+                chev.classList.remove('rotate-180');
+            } else {
+                sub.classList.toggle('show');
+                chev.classList.toggle('rotate-180');
+            }
+        }
+
+        function runLoading(msg, callback) {
             const overlay = document.getElementById('loading-overlay');
             const bar = document.getElementById('progress-fill');
-            const status = document.getElementById('loading-status');
-            
             overlay.style.display = 'flex';
             overlay.style.opacity = '1';
-            status.innerText = customMsg || "RECOVERING DATA...";
             bar.style.width = '0%';
-
             let p = 0;
             const inv = setInterval(() => {
-                p += Math.floor(Math.random() * 15) + 2;
-                if (p >= 100) p = 100;
+                p += 10;
                 bar.style.width = p + '%';
-                
                 if (p >= 100) {
                     clearInterval(inv);
                     if (callback) callback();
-                    else hideLoading();
-                }
-            }, duration);
-        }
-
-        function hideLoading() {
-            const overlay = document.getElementById('loading-overlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.style.display = 'none', 400);
-        }
-
-        // Fungsi Sinkronisasi (Bisa dipanggil manual atau otomatis)
-        function syncAllSystems(isAuto = false) {
-            const title = document.getElementById('loading-title');
-            const status = document.getElementById('loading-status');
-            
-            title.innerText = isAuto ? "MISSION START !" : "HEAVY SYNC !";
-            
-            runLoading(isAuto ? "WARMING UP ALL UNITS..." : "SYNCHRONIZING ALL UNITS...", () => {
-                Object.keys(appUrls).forEach(key => {
-                    const frame = document.getElementById('frame-' + key);
-                    // Langsung isi SRC untuk semua iframe
-                    frame.src = appUrls[key];
-                });
-
-                status.innerText = "ALL SYSTEMS READY! MISSION BEGINS";
-                status.classList.replace('text-yellow-500', 'text-green-400');
-
-                setTimeout(() => {
-                    hideLoading();
-                    // Kembalikan status ke default setelah loading hilang
                     setTimeout(() => {
-                        title.innerText = "MISSION START !";
-                        status.innerText = "INITIALIZING...";
-                        status.classList.replace('text-green-400', 'text-yellow-500');
+                        overlay.style.opacity = '0';
+                        setTimeout(() => overlay.style.display = 'none', 400);
                     }, 500);
-                }, 1200); 
-            }, 120); // Sedikit lebih lambat agar proses load iframe punya waktu bernapas
+                }
+            }, 80);
         }
 
         function showPage(pageId) {
-            if (pageId === 'dashboard') {
-                switchView(pageId);
-                return;
+            // AUTOHIDE LOGIC: Jika yang diklik adalah sub-menu SDM, tutup dropdown-nya
+            if (pageId === 'sdm_internal' || pageId === 'sdm_ahli') {
+                toggleSubmenu('sdm-sub', true);
             }
 
-            const targetFrame = document.getElementById('frame-' + pageId);
-            const isLoaded = (targetFrame && targetFrame.src !== "" && targetFrame.src !== window.location.href);
-
-            if (!isLoaded) {
-                runLoading("PREPARING UNIT: " + pageId.toUpperCase(), () => {
-                    targetFrame.src = appUrls[pageId];
-                    switchView(pageId);
-                    hideLoading();
-                });
-            } else {
-                switchView(pageId);
+            const frame = document.getElementById('frame-' + pageId);
+            if (pageId !== 'dashboard' && pageId !== 'portal') {
+                if (!frame.src || frame.src === window.location.href) {
+                    frame.src = appUrls[pageId];
+                }
             }
+            switchView(pageId);
         }
 
         function switchView(pageId) {
@@ -205,27 +236,24 @@
             
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('sidebar-active');
-                btn.classList.add('text-gray-300', 'hover:bg-white/10');
+                if(!btn.getAttribute('onclick').includes('toggleSubmenu')) {
+                    btn.classList.add('text-gray-300', 'hover:bg-white/10');
+                }
             });
-            
+
             const activeBtn = document.getElementById('btn-' + pageId);
             if(activeBtn) {
                 activeBtn.classList.add('sidebar-active');
                 activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10');
             }
-            if (window.innerWidth < 1024) toggleSidebarMobile();
         }
 
-        function toggleSidebarMobile() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
-
-        // INI BAGIAN PENTING: Jalankan sinkronisasi otomatis saat pertama kali dibuka
         window.onload = () => {
-            syncAllSystems(true); 
+            runLoading("WARMING UP ALL UNITS...", () => {
+                Object.keys(appUrls).forEach(key => {
+                    document.getElementById('frame-' + key).src = appUrls[key];
+                });
+            });
         };
     </script>
 </body>
