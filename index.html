@@ -33,7 +33,6 @@
         #loading-overlay {
             position: fixed; inset: 0; background: #000; z-index: 10000;
             display: none; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.4s ease;
         }
         .retro-font { font-family: 'Press Start 2P', cursive; }
         .mission-start { color: #ff0000; font-size: 1.5rem; text-shadow: 3px 3px #fff; margin-bottom: 25px; animation: pulse 0.15s infinite; }
@@ -46,11 +45,11 @@
         .page-content.active { display: block; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Submenu Styling */
+        /* Submenu Animation */
         .submenu { 
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, background 0.3s ease;
+            transition: max-height 0.3s ease-out;
             background: rgba(0,0,0,0.1); 
         }
         .submenu.show { max-height: 200px; }
@@ -66,17 +65,23 @@
     <div id="loading-overlay">
         <h2 id="loading-title" class="retro-font mission-start">MISSION START !</h2>
         <div class="bar-container"><div id="progress-fill" class="bar-fill"></div></div>
-        <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 tracking-tighter text-center leading-relaxed max-w-xs uppercase">DIDIKHAND IS INITIALIZING ALL SYSTEMS...</p>
+        <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 text-center uppercase tracking-tighter">INITIALIZING SYSTEM...</p>
     </div>
 
+    <header class="lg:hidden bg-[#2d4a56] text-white p-4 flex justify-between items-center shadow-md z-[60] relative">
+        <button onclick="toggleSidebarMobile()" class="text-2xl p-2 focus:outline-none"><i class="fas fa-bars"></i></button>
+        <span class="font-bold text-xs tracking-widest uppercase">IKP Monitoring</span>
+        <div class="w-10"></div>
+    </header>
+
     <div class="flex h-screen relative">
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0 shadow-xl">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0 shadow-xl transition-transform duration-300 ease-in-out">
             <div class="p-4 flex items-center mt-2">
                 <div class="min-w-[40px]">
                     <img src="https://ui-avatars.com/api/?name=I&background=e0e7ff&color=000" class="w-10 h-10 rounded-full border-2 border-white/20">
                 </div>
                 <div class="ml-4 profile-detail">
-                    <h3 class="font-semibold text-sm truncate w-32 text-white">MONITORING</h3>
+                    <h3 class="font-semibold text-sm truncate w-32">MONITORING</h3>
                     <p class="text-[10px] text-yellow-500 font-bold uppercase">BIDANG IKP</p>
                 </div>
             </div>
@@ -106,6 +111,8 @@
             </nav>
         </aside>
 
+        <div id="overlay" onclick="toggleSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+
         <main class="flex-1 flex flex-col bg-white overflow-hidden relative">
             <div id="view-dashboard" class="page-content active p-6 lg:p-10 overflow-y-auto">
                 <div class="max-w-7xl mx-auto">
@@ -123,46 +130,31 @@
                 <div class="max-w-5xl mx-auto">
                     <h1 class="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Portal Input Data</h1>
                     <p class="text-slate-500 mb-8 text-sm">Pilih layanan formulir di bawah ini untuk memulai input data kinerja.</p>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
-                                <i class="fas fa-file-alt text-2xl"></i>
-                            </div>
+                            <i class="fas fa-file-alt text-2xl text-blue-600 mb-4"></i>
                             <h3 class="font-bold text-lg text-slate-800 mb-2">Dokumen</h3>
-                            <p class="text-slate-500 text-sm mb-6">Input data administrasi dan dokumen IKP</p>
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold">Buka Formulir</a>
                         </div>
-
                         <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
-                                <i class="fas fa-newspaper text-2xl"></i>
-                            </div>
+                            <i class="fas fa-newspaper text-2xl text-green-600 mb-4"></i>
                             <h3 class="font-bold text-lg text-slate-800 mb-2">Pers Rilis</h3>
-                            <p class="text-slate-500 text-sm mb-6">Input naskah siaran pers dan berita resmi.</p>
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold">Buka Formulir</a>
                         </div>
-
                         <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mb-4">
-                                <i class="fas fa-broadcast-tower text-2xl"></i>
-                            </div>
+                            <i class="fas fa-broadcast-tower text-2xl text-yellow-600 mb-4"></i>
                             <h3 class="font-bold text-lg text-slate-800 mb-2">Diseminasi</h3>
-                            <p class="text-slate-500 text-sm mb-6">Input data penyebarluasan informasi publik.</p>
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold">Buka Formulir</a>
                         </div>
-
                         <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-4">
-                                <i class="fas fa-bullhorn text-2xl"></i>
-                            </div>
+                            <i class="fas fa-bullhorn text-2xl text-purple-600 mb-4"></i>
                             <h3 class="font-bold text-lg text-slate-800 mb-2">Publikasi</h3>
-                            <p class="text-slate-500 text-sm mb-6">Input data publikasi media massa.</p>
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold hover:bg-slate-700 transition">Buka Formulir</a>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?usp=header" target="_blank" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold">Buka Formulir</a>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div id="view-sdm_internal" class="page-content"><iframe id="frame-sdm_internal"></iframe></div>
             <div id="view-sdm_ahli" class="page-content"><iframe id="frame-sdm_ahli"></iframe></div>
             <div id="view-inventory" class="page-content"><iframe id="frame-inventory"></iframe></div>
@@ -181,6 +173,13 @@
             purchase: 'https://script.google.com/macros/s/AKfycbzS5KiI8eJ6kW-SV8jjyIqTXCMSc20El3NEg1yx2dyoMNiq1dRlRV9wuxxGltiWhppK/exec',
             reporting: 'https://script.google.com/macros/s/AKfycbzNy0C25RI-v0eif-wT22-nwh9BJ3F2qPxbM4OmNCXsjv3qulG0uMprDzbpOCb_Dwsv/exec'
         };
+
+        function toggleSidebarMobile() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
 
         function toggleSubmenu(id, forceClose = false) {
             const sub = document.getElementById(id);
@@ -216,7 +215,7 @@
         }
 
         function showPage(pageId) {
-            // AUTOHIDE LOGIC: Jika yang diklik adalah sub-menu SDM, tutup dropdown-nya
+            // Auto-hide submenu SDM jika diklik
             if (pageId === 'sdm_internal' || pageId === 'sdm_ahli') {
                 toggleSubmenu('sdm-sub', true);
             }
@@ -234,6 +233,7 @@
             document.querySelectorAll('.page-content').forEach(v => v.classList.remove('active'));
             document.getElementById('view-' + pageId).classList.add('active');
             
+            // Highlight button
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('sidebar-active');
                 if(!btn.getAttribute('onclick').includes('toggleSubmenu')) {
@@ -246,10 +246,18 @@
                 activeBtn.classList.add('sidebar-active');
                 activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10');
             }
+
+            // Close sidebar on Mobile after click
+            if (window.innerWidth < 1024) {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar.classList.contains('-translate-x-full')) {
+                    toggleSidebarMobile();
+                }
+            }
         }
 
         window.onload = () => {
-            runLoading("WARMING UP ALL UNITS...", () => {
+            runLoading("INITIALIZING ALL UNITS...", () => {
                 Object.keys(appUrls).forEach(key => {
                     document.getElementById('frame-' + key).src = appUrls[key];
                 });
