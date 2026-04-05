@@ -14,69 +14,30 @@
             overflow-x: hidden;
             white-space: nowrap;
         }
-
         @media (min-width: 1024px) {
             #sidebar:not(:hover) { width: 70px; }
             #sidebar:not(:hover) .nav-text, #sidebar:not(:hover) .profile-detail, #sidebar:not(:hover) .chevron { opacity: 0; pointer-events: none; }
             #sidebar:hover { width: 260px; }
         }
-
         .nav-text, .profile-detail, .chevron { transition: opacity 0.2s ease; }
-
-        .sidebar-active { 
-            background-color: #f8fafc; 
-            color: #2d4a56 !important; 
-            border-radius: 9999px 0 0 9999px; 
-            font-weight: bold;
-        }
-
-        #loading-overlay, #login-overlay {
-            position: fixed; inset: 0; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease;
-        }
-
+        .sidebar-active { background-color: #f8fafc; color: #2d4a56 !important; border-radius: 9999px 0 0 9999px; font-weight: bold; }
+        #loading-overlay, #login-overlay { position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
         #loading-overlay { background: #000; display: none; }
         #login-overlay { background: #2d4a56; z-index: 11000; }
-
         .retro-font { font-family: 'Press Start 2P', cursive; }
         .mission-start { color: #ff0000; font-size: 1.5rem; text-shadow: 3px 3px #fff; margin-bottom: 25px; animation: pulse 0.15s infinite; }
         .bar-container { width: 320px; height: 24px; border: 4px solid #fff; padding: 3px; background: #222; }
         .bar-fill { height: 100%; background: linear-gradient(to bottom, #ffcc00, #ff6600); width: 0%; transition: width 0.2s; }
-        
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
         .page-content { display: none; width: 100%; height: 100%; }
         .page-content.active { display: block; }
         iframe { width: 100%; height: 100%; border: none; }
-
-        .pin-input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #fff;
-            color: white;
-            text-align: center;
-            font-size: 2rem;
-            letter-spacing: 0.8rem;
-            width: 220px;
-            padding: 15px;
-            border-radius: 15px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        .pin-input:focus { border-color: #ffcc00; }
-
-        .submenu { 
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            background: rgba(0,0,0,0.1); 
-        }
+        .pin-input { background: rgba(255, 255, 255, 0.1); border: 2px solid #fff; color: white; text-align: center; font-size: 2rem; letter-spacing: 0.8rem; width: 220px; padding: 15px; border-radius: 15px; outline: none; }
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(0,0,0,0.1); }
         .submenu.show { max-height: 200px; }
         .chevron { transition: transform 0.3s ease; }
         .rotate-180 { transform: rotate(180deg); }
-
         .portal-card { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
-        .portal-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-color: #2d4a56; }
     </style>
 </head>
 <body class="bg-slate-100 font-sans overflow-y-auto lg:overflow-hidden">
@@ -84,54 +45,41 @@
     <div id="login-overlay">
         <div class="text-center p-8 bg-black/20 rounded-3xl backdrop-blur-md border border-white/10">
             <i class="fas fa-shield-alt text-5xl text-yellow-500 mb-6"></i>
-            <h2 class="retro-font text-white text-[10px] mb-8 tracking-widest">ACCESS RESTRICTED</h2>
+            <h2 class="retro-font text-white text-[10px] mb-8 tracking-widest">SECURE LOGIN</h2>
             <input type="password" id="pin-field" class="pin-input mb-4" placeholder="****" maxlength="4" inputmode="numeric" autofocus>
-            <p id="login-error" class="text-red-400 text-[8px] retro-font hidden mt-4">INVALID CREDENTIALS</p>
-            <p class="text-white/40 text-[8px] mt-6 uppercase tracking-widest font-bold">IKP Monitoring System v2.3</p>
+            <p class="text-[10px] text-yellow-500 font-bold uppercase">Turn-On Your GPS</p>
+            <p id="login-error" class="text-red-400 text-[8px] retro-font hidden mt-4">ACCESS DENIED</p>
         </div>
     </div>
 
     <div id="loading-overlay">
-        <h2 id="loading-title" class="retro-font mission-start">MISSION START !</h2>
+        <h2 id="loading-title" class="retro-font mission-start">LOGGING IN...</h2>
         <div class="bar-container"><div id="progress-fill" class="bar-fill"></div></div>
-        <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 text-center uppercase tracking-tighter">INITIALIZING SYSTEM...</p>
-    </div>
-
-    <div id="form-container" class="fixed inset-0 bg-white z-[70] hidden flex-col">
-        <div class="p-4 bg-[#2d4a56] text-white flex justify-between items-center shadow-lg">
-            <span class="font-bold text-xs tracking-widest uppercase">Input Form Kinerja</span>
-            <button onclick="closeForm()" class="text-white hover:text-red-400 p-2 flex items-center transition">
-                <i class="fas fa-times-circle text-xl mr-2"></i> 
-                <span class="text-[10px] font-bold">TUTUP</span>
-            </button>
-        </div>
-        <iframe id="form-iframe" class="flex-1 w-full border-none bg-gray-50"></iframe>
+        <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 text-center uppercase">SYSTEM INITIALIZING...</p>
     </div>
 
     <header class="lg:hidden bg-[#2d4a56] text-white p-4 flex justify-between items-center shadow-md z-[60] relative">
-        <button onclick="toggleSidebarMobile()" class="text-2xl p-2 focus:outline-none"><i class="fas fa-bars"></i></button>
+        <button onclick="toggleSidebarMobile()" class="text-2xl p-2"><i class="fas fa-bars"></i></button>
         <span class="font-bold text-xs tracking-widest uppercase">IKP Monitoring</span>
         <div class="w-10"></div>
     </header>
 
     <div class="flex h-screen relative">
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0 shadow-xl transition-transform duration-300 ease-in-out">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0 shadow-xl transition-transform duration-300">
             <div class="p-4 flex items-center mt-2">
-                <div class="min-w-[40px]">
-                    <img src="https://ui-avatars.com/api/?name=I&background=e0e7ff&color=000" class="w-10 h-10 rounded-full border-2 border-white/20">
-                </div>
+                <div class="min-w-[40px]"><img src="https://ui-avatars.com/api/?name=I&background=fbbf24&color=000" class="w-10 h-10 rounded-full"></div>
                 <div class="ml-4 profile-detail">
-                    <h3 id="user-display-name" class="font-semibold text-sm truncate w-32 uppercase">Monitoring</h3>
+                    <h3 id="user-display-name" class="font-semibold text-sm uppercase">Guest</h3>
                     <p class="text-[10px] text-yellow-500 font-bold uppercase">Bidang IKP</p>
                 </div>
             </div>
             <hr class="border-white/10 my-4">
-            <nav class="flex-1 ml-3 overflow-y-auto overflow-x-hidden">
+            <nav class="flex-1 ml-3 overflow-y-auto">
                 <ul class="space-y-2">
-                    <li><button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-3 transition text-sm text-left"><i class="fas fa-th-large min-w-[30px] text-center"></i><span class="ml-4 nav-text">Dashboard</span></button></li>
-                    <li><button onclick="showPage('portal')" id="btn-portal" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-door-open min-w-[30px] text-center"></i><span class="ml-4 nav-text">Portal Input</span></button></li>
+                    <li><button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-3 text-sm text-left"><i class="fas fa-th-large min-w-[30px] text-center"></i><span class="ml-4 nav-text">Dashboard</span></button></li>
+                    <li><button onclick="showPage('portal')" id="btn-portal" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left"><i class="fas fa-door-open min-w-[30px] text-center"></i><span class="ml-4 nav-text">Portal Input</span></button></li>
                     <li>
-                        <button onclick="toggleSubmenu('sdm-sub')" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left">
+                        <button onclick="toggleSubmenu('sdm-sub')" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-users-cog min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text flex-1">Monev SDM</span>
                             <i id="sdm-chevron" class="fas fa-chevron-down text-[10px] mr-4 chevron"></i>
@@ -141,19 +89,17 @@
                             <li><button onclick="showPage('sdm_ahli')" id="btn-sdm_ahli" class="w-full text-left p-2 text-xs text-gray-400 hover:text-white transition rounded-l-full">• Tenaga Ahli</button></li>
                         </ul>
                     </li>
-                    <li><button onclick="showPage('inventory')" id="btn-inventory" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-box min-w-[30px] text-center"></i><span class="ml-4 nav-text">Pustaka</span></button></li>
-                    <li><button onclick="showPage('orders')" id="btn-orders" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-layer-group min-w-[30px] text-center"></i><span class="ml-4 nav-text">Media Sosial</span></button></li>
-                    <li><button onclick="showPage('purchase')" id="btn-purchase" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-shopping-cart min-w-[30px] text-center"></i><span class="ml-4 nav-text">Siaran Pers</span></button></li>
-                    <li><button onclick="showPage('reporting')" id="btn-reporting" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-chart-line min-w-[30px] text-center"></i><span class="ml-4 nav-text">Publikasi</span></button></li>
+                    <li><button onclick="showPage('inventory')" id="btn-inventory" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left"><i class="fas fa-box min-w-[30px] text-center"></i><span class="ml-4 nav-text">Pustaka</span></button></li>
+                    <li><button onclick="showPage('orders')" id="btn-orders" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left"><i class="fas fa-layer-group min-w-[30px] text-center"></i><span class="ml-4 nav-text">Media Sosial</span></button></li>
+                    <li><button onclick="showPage('purchase')" id="btn-purchase" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left"><i class="fas fa-shopping-cart min-w-[30px] text-center"></i><span class="ml-4 nav-text">Siaran Pers</span></button></li>
+                    <li><button onclick="showPage('reporting')" id="btn-reporting" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left"><i class="fas fa-chart-line min-w-[30px] text-center"></i><span class="ml-4 nav-text">Publikasi</span></button></li>
                     
-                    <li><button onclick="showPage('buletin')" id="btn-buletin" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-book-open min-w-[30px] text-center"></i><span class="ml-4 nav-text">Buletin</span></button></li>
+                    <li><button onclick="showPage('buletin')" id="btn-buletin" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left"><i class="fas fa-book-open min-w-[30px] text-center"></i><span class="ml-4 nav-text">Buletin</span></button></li>
                     
-                    <li><button onclick="showPage('kim')" id="btn-kim" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-network-wired min-w-[30px] text-center"></i><span class="ml-4 nav-text">KIM</span></button></li>
-                    
-                    <li class="mt-4 pt-4 border-t border-white/10">    
-                        <button onclick="handleLogout()" class="w-full flex items-center p-3 text-[#d40056] hover:bg-red-900/10 rounded-l-full transition text-sm text-left font-bold">
-                            <i class="fas fa-sign-out-alt min-w-[30px] text-center"></i>
-                            <span class="ml-4 nav-text">Keluar Sistem</span>
+                    <li><button onclick="showPage('kim')" id="btn-kim" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left"><i class="fas fa-network-wired min-w-[30px] text-center"></i><span class="ml-4 nav-text">KIM</span></button></li>
+                    <li class="mt-4 pt-4 border-t border-white/10">
+                        <button onclick="handleLogout()" class="w-full flex items-center p-3 text-[#f87171] hover:bg-red-900/10 rounded-l-full text-sm text-left font-bold">
+                            <i class="fas fa-sign-out-alt min-w-[30px] text-center"></i><span class="ml-4 nav-text">Keluar Sistem</span>
                         </button>
                     </li>
                 </ul>
@@ -163,48 +109,25 @@
         <div id="overlay" onclick="toggleSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
 
         <main class="flex-1 flex flex-col bg-white overflow-hidden relative">
-            
             <div id="view-dashboard" class="page-content active p-6 lg:p-10 overflow-y-auto">
                 <div class="max-w-7xl mx-auto">
-                    <h1 class="text-2xl font-bold text-slate-800 mb-8 tracking-tight">Agregat Data Kinerja</h1>
+                    <h1 class="text-2xl font-bold text-slate-800 mb-8">Dashboard Agregat</h1>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Jumlah Siaran Pers</p><h4 class="text-3xl font-black text-slate-700 tracking-tighter">5,483</h4></div>
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Jumlah Postingan</p><h4 class="text-3xl font-black text-slate-700 tracking-tighter">2,859</h4></div>
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Capaian Target</p><h4 class="text-3xl font-black text-slate-700 tracking-tighter">92%</h4></div>
-                        <div class="bg-red-50 p-6 rounded-2xl border border-red-100 shadow-sm"><p class="text-[10px] text-red-400 font-bold uppercase mb-1">Jumlah Peliputan</p><h4 class="text-3xl font-black text-red-600 tracking-tighter">38</h4></div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Siaran Pers</p><h4 class="text-3xl font-black text-slate-700">5,483</h4></div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Media Sosial</p><h4 class="text-3xl font-black text-slate-700">2,859</h4></div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Capaian</p><h4 class="text-3xl font-black text-green-600">92%</h4></div>
+                        <div class="bg-red-50 p-6 rounded-2xl border border-red-100 shadow-sm"><p class="text-[10px] text-red-400 font-bold uppercase mb-1">Peliputan</p><h4 class="text-3xl font-black text-red-600">38</h4></div>
                     </div>
                 </div>
             </div>
 
-            <div id="view-portal" class="page-content p-6 lg:p-10 pb-24 overflow-y-auto bg-slate-50">
-                <div class="max-w-5xl mx-auto">
-                    <h1 class="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Portal Input Data</h1>
-                    <p class="text-slate-500 mb-8 text-sm">Pilih layanan formulir di bawah ini untuk input data tanpa keluar halaman.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <i class="fas fa-file-alt text-2xl text-blue-600 mb-4"></i>
-                            <h3 class="font-bold text-lg text-slate-800 mb-2">Dokumen</h3>
-                            <button onclick="openEmbeddedForm('https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?embedded=true')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold transition hover:bg-slate-700">Input Data</button>
-                        </div>
-                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <i class="fas fa-newspaper text-2xl text-green-600 mb-4"></i>
-                            <h3 class="font-bold text-lg text-slate-800 mb-2">Pers Rilis</h3>
-                            <button onclick="openEmbeddedForm('https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?embedded=true')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold transition hover:bg-slate-700">Input Data</button>
-                        </div>
-                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <i class="fas fa-broadcast-tower text-2xl text-yellow-600 mb-4"></i>
-                            <h3 class="font-bold text-lg text-slate-800 mb-2">Diseminasi</h3>
-                            <button onclick="openEmbeddedForm('https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?embedded=true')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold transition hover:bg-slate-700">Input Data</button>
-                        </div>
-                        <div class="portal-card bg-white p-6 rounded-2xl flex flex-col items-center text-center shadow-sm">
-                            <i class="fas fa-bullhorn text-2xl text-purple-600 mb-4"></i>
-                            <h3 class="font-bold text-lg text-slate-800 mb-2">Publikasi</h3>
-                            <button onclick="openEmbeddedForm('https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?embedded=true')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl font-semibold transition hover:bg-slate-700">Input Data</button>
-                        </div>
-                    </div>
-                </div>
+            <div id="view-portal" class="page-content p-6 lg:p-10 overflow-y-auto bg-slate-50">
+                <div class="max-w-5xl mx-auto"><h1 class="text-2xl font-bold text-slate-800 mb-8">Portal Input Kinerja</h1><div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="portal-card bg-white p-6 rounded-2xl text-center"><i class="fas fa-file-alt text-2xl text-blue-600 mb-4"></i><h3 class="font-bold mb-4">Input Dokumen</h3><button onclick="openEmbeddedForm('https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform?embedded=true')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl">Buka Form</button></div>
+                    <div class="portal-card bg-white p-6 rounded-2xl text-center"><i class="fas fa-broadcast-tower text-2xl text-yellow-600 mb-4"></i><h3 class="font-bold mb-4">Input Diseminasi</h3><button onclick="openEmbeddedForm('https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform?embedded=true')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl">Buka Form</button></div>
+                </div></div>
             </div>
-
+            
             <div id="view-sdm_internal" class="page-content"><iframe id="frame-sdm_internal"></iframe></div>
             <div id="view-sdm_ahli" class="page-content"><iframe id="frame-sdm_ahli"></iframe></div>
             <div id="view-inventory" class="page-content"><iframe id="frame-inventory"></iframe></div>
@@ -216,8 +139,13 @@
         </main>
     </div>
 
+    <div id="form-container" class="fixed inset-0 bg-white z-[70] hidden flex-col">
+        <div class="p-4 bg-[#2d4a56] text-white flex justify-between items-center"><span class="text-xs font-bold uppercase">Form Input</span><button onclick="closeForm()" class="font-bold">TUTUP [X]</button></div>
+        <iframe id="form-iframe" class="flex-1 w-full"></iframe>
+    </div>
+
     <script>
-        // GANTI INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        // GANTI DENGAN URL WEB APP GAS ANDA
         const AUTH_API_URL = "https://script.google.com/macros/s/AKfycbyFYXfX_akOBv2rj9HahV_OjwLxhkMHTOmuttnuawPEtgCd7_0Gc09Pkstt2PUebNlQ/exec";
 
         const appUrls = {
@@ -234,152 +162,113 @@
         const pinField = document.getElementById('pin-field');
         const loginOverlay = document.getElementById('login-overlay');
         const loginError = document.getElementById('login-error');
-        const userDisplayName = document.getElementById('user-display-name');
+
+        // AMBIL GPS DENGAN TIMEOUT 2 DETIK (Agar tidak macet)
+        async function getGPS() {
+            return new Promise((res) => {
+                if (!navigator.geolocation) return res("Not Supported");
+                const timer = setTimeout(() => res("Timeout"), 2000);
+                navigator.geolocation.getCurrentPosition(
+                    (p) => { clearTimeout(timer); res(`${p.coords.latitude},${p.coords.longitude}`); },
+                    (e) => { clearTimeout(timer); res("Denied/Error"); },
+                    { timeout: 2000 }
+                );
+            });
+        }
 
         pinField.addEventListener('input', async (e) => {
             if (e.target.value.length === 4) {
-                const enteredPin = e.target.value;
+                const pin = e.target.value;
                 pinField.disabled = true;
-                pinField.style.opacity = "0.5";
+                loginError.innerText = "VERIFYING...";
+                loginError.classList.remove('hidden');
+
+                const gps = await getGPS();
+                const device = navigator.userAgent;
 
                 try {
                     const response = await fetch(AUTH_API_URL, {
                         method: 'POST',
-                        body: JSON.stringify({ pin: enteredPin })
+                        body: JSON.stringify({ pin: pin, lokasi: gps, perangkat: device })
                     });
                     const result = await response.json();
 
                     if (result.status === "success") {
-                        userDisplayName.innerText = result.nama;
-                        if (result.role !== 'admin') {
-                           const btnKim = document.getElementById('btn-kim');
-                           if(btnKim) btnKim.style.display = 'none';
-                        }
+                        document.getElementById('user-display-name').innerText = result.nama;
                         loginOverlay.style.opacity = '0';
-                        setTimeout(() => {
-                            loginOverlay.style.display = 'none';
-                            startApp();
-                        }, 500);
+                        setTimeout(() => { loginOverlay.style.display = 'none'; startApp(); }, 500);
                     } else {
-                        loginError.innerText = "PIN TIDAK TERDAFTAR";
-                        loginError.classList.remove('hidden');
-                        setTimeout(() => loginError.classList.add('hidden'), 2000);
+                        showError("PIN SALAH!");
                     }
                 } catch (err) {
-                    loginError.innerText = "GANGGUAN DATABASE";
-                    loginError.classList.remove('hidden');
-                    setTimeout(() => loginError.classList.add('hidden'), 2000);
-                } finally {
-                    pinField.disabled = false;
-                    pinField.style.opacity = "1";
-                    pinField.value = '';
-                    pinField.focus();
+                    showError("SERVER OFFLINE");
                 }
             }
         });
 
-        function openEmbeddedForm(url) {
-            const container = document.getElementById('form-container');
-            const iframe = document.getElementById('form-iframe');
-            runLoading("PREPARING FORM...", () => {
-                iframe.src = url;
-                container.classList.remove('hidden');
-                container.classList.add('flex');
-            });
-        }
-
-        function closeForm() {
-            const container = document.getElementById('form-container');
-            const iframe = document.getElementById('form-iframe');
-            container.classList.add('hidden');
-            container.classList.remove('flex');
-            iframe.src = ""; 
+        function showError(msg) {
+            loginError.innerText = msg;
+            setTimeout(() => {
+                loginError.classList.add('hidden');
+                pinField.value = '';
+                pinField.disabled = false;
+                pinField.focus();
+            }, 2000);
         }
 
         function startApp() {
-            runLoading("INITIALIZING ALL UNITS...", () => {
-                Object.keys(appUrls).forEach(key => {
-                    const frame = document.getElementById('frame-' + key);
-                    if(frame) frame.src = appUrls[key];
+            runLoading("BOOTING SYSTEM...", () => {
+                Object.keys(appUrls).forEach(k => {
+                    const f = document.getElementById('frame-'+k);
+                    if(f) f.src = appUrls[k];
                 });
             });
         }
 
-        function handleLogout() {
-            runLoading("SECURING SYSTEM...", () => {
-                window.location.reload();
-            });
-        }
-
-        function showPage(pageId) {
-            if (pageId === 'sdm_internal' || pageId === 'sdm_ahli') {
-                toggleSubmenu('sdm-sub', true);
-            }
-            switchView(pageId);
-        }
-
-        function switchView(pageId) {
+        function showPage(id) {
             document.querySelectorAll('.page-content').forEach(v => v.classList.remove('active'));
-            document.getElementById('view-' + pageId).classList.add('active');
-            
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('sidebar-active');
-                if(!btn.getAttribute('onclick').includes('toggleSubmenu')) {
-                    btn.classList.add('text-gray-300', 'hover:bg-white/10');
-                }
-            });
-
-            const activeBtn = document.getElementById('btn-' + pageId);
-            if(activeBtn) {
-                activeBtn.classList.add('sidebar-active');
-                activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10');
-            }
-            if (window.innerWidth < 1024) { toggleSidebarMobile(); }
+            document.getElementById('view-'+id).classList.add('active');
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('sidebar-active'));
+            const btn = document.getElementById('btn-'+id);
+            if(btn) btn.classList.add('sidebar-active');
+            if (window.innerWidth < 1024) toggleSidebarMobile();
         }
 
         function toggleSidebarMobile() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
         }
 
-        function toggleSubmenu(id, forceClose = false) {
-            const sub = document.getElementById(id);
-            const chev = document.getElementById('sdm-chevron');
-            if (forceClose) {
-                sub.classList.remove('show');
-                chev.classList.remove('rotate-180');
-            } else {
-                sub.classList.toggle('show');
-                chev.classList.toggle('rotate-180');
-            }
+        function toggleSubmenu(id) {
+            document.getElementById(id).classList.toggle('show');
+            document.getElementById('sdm-chevron').classList.toggle('rotate-180');
         }
 
-        function runLoading(msg, callback) {
-            const overlay = document.getElementById('loading-overlay');
+        function openEmbeddedForm(url) {
+            document.getElementById('form-iframe').src = url;
+            document.getElementById('form-container').classList.remove('hidden');
+            document.getElementById('form-container').classList.add('flex');
+        }
+
+        function closeForm() {
+            document.getElementById('form-container').classList.add('hidden');
+            document.getElementById('form-iframe').src = "";
+        }
+
+        function handleLogout() { window.location.reload(); }
+
+        function runLoading(msg, cb) {
+            const ov = document.getElementById('loading-overlay');
             const bar = document.getElementById('progress-fill');
-            const status = document.getElementById('loading-status');
-            status.innerText = msg;
-            overlay.style.display = 'flex';
-            overlay.style.opacity = '1';
-            bar.style.width = '0%';
+            document.getElementById('loading-status').innerText = msg;
+            ov.style.display = 'flex';
             let p = 0;
             const inv = setInterval(() => {
-                p += 5;
+                p += 10;
                 bar.style.width = p + '%';
-                if (p >= 100) {
-                    clearInterval(inv);
-                    if (callback) callback();
-                    setTimeout(() => {
-                        overlay.style.opacity = '0';
-                        setTimeout(() => overlay.style.display = 'none', 400);
-                    }, 500);
-                }
-            }, 30);
+                if(p >= 100) { clearInterval(inv); if(cb) cb(); setTimeout(() => ov.style.display='none', 500); }
+            }, 50);
         }
-
-        window.onload = () => { pinField.focus(); };
     </script>
 </body>
 </html>
