@@ -146,12 +146,14 @@
                     <li><button onclick="showPage('purchase')" id="btn-purchase" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-shopping-cart min-w-[30px] text-center"></i><span class="ml-4 nav-text">Siaran Pers</span></button></li>
                     <li><button onclick="showPage('reporting')" id="btn-reporting" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-chart-line min-w-[30px] text-center"></i><span class="ml-4 nav-text">Publikasi</span></button></li>
                     
+                    <li><button onclick="showPage('buletin')" id="btn-buletin" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-book-open min-w-[30px] text-center"></i><span class="ml-4 nav-text">Buletin</span></button></li>
+                    
                     <li><button onclick="showPage('kim')" id="btn-kim" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full transition text-sm text-left"><i class="fas fa-network-wired min-w-[30px] text-center"></i><span class="ml-4 nav-text">KIM</span></button></li>
                     
-                    <li class="mt-4 pt-4 border-t border-white/10">
-                        <button onclick="handleLogout()" class="w-full flex items-center p-3 text-yellow-500 hover:bg-white/10 rounded-l-full transition text-sm text-left font-bold">
+                    <li class="mt-4 pt-4 border-t border-white/10">    
+                        <button onclick="handleLogout()" class="w-full flex items-center p-3 text-[#d40056] hover:bg-red-900/10 rounded-l-full transition text-sm text-left font-bold">
                             <i class="fas fa-sign-out-alt min-w-[30px] text-center"></i>
-                            <span class="ml-4 text-yellow-500 nav-text">Keluar Sistem</span>
+                            <span class="ml-4 nav-text">Keluar Sistem</span>
                         </button>
                     </li>
                 </ul>
@@ -209,6 +211,7 @@
             <div id="view-orders" class="page-content"><iframe id="frame-orders"></iframe></div>
             <div id="view-purchase" class="page-content"><iframe id="frame-purchase"></iframe></div>
             <div id="view-reporting" class="page-content"><iframe id="frame-reporting"></iframe></div>
+            <div id="view-buletin" class="page-content"><iframe id="frame-buletin"></iframe></div>
             <div id="view-kim" class="page-content"><iframe id="frame-kim"></iframe></div>
         </main>
     </div>
@@ -224,6 +227,7 @@
             orders: 'https://script.google.com/macros/s/AKfycbylGzS4xWWvs6pLPIs2T5hMVSe1noCLQEpXo2T1Z79XfaVBH6_OGBo2TvYUwiM-ZqJD/exec',
             purchase: 'https://script.google.com/macros/s/AKfycbzS5KiI8eJ6kW-SV8jjyIqTXCMSc20El3NEg1yx2dyoMNiq1dRlRV9wuxxGltiWhppK/exec',
             reporting: 'https://script.google.com/macros/s/AKfycbzNy0C25RI-v0eif-wT22-nwh9BJ3F2qPxbM4OmNCXsjv3qulG0uMprDzbpOCb_Dwsv/exec',
+            buletin: 'https://script.google.com/macros/s/AKfycbxWphwtNPzcj48vz7vg_NeNzH3RFLey9Uq_jxrWIzxn5xABtiLzav4bg1geBreIl6taVg/exec',
             kim: 'https://script.google.com/macros/s/AKfycbzwK8xUB_nbTvv5khgAjp4EeYzXp3BoeQkFEtTKiWtdR_508QtMihN5SxUFuYyBSfajag/exec'
         };
 
@@ -232,7 +236,6 @@
         const loginError = document.getElementById('login-error');
         const userDisplayName = document.getElementById('user-display-name');
 
-        // LOGIKA PIN TERHUBUNG GOOGLE SHEETS
         pinField.addEventListener('input', async (e) => {
             if (e.target.value.length === 4) {
                 const enteredPin = e.target.value;
@@ -248,13 +251,10 @@
 
                     if (result.status === "success") {
                         userDisplayName.innerText = result.nama;
-                        
-                        // Role Management: Sembunyikan KIM jika bukan admin
                         if (result.role !== 'admin') {
                            const btnKim = document.getElementById('btn-kim');
                            if(btnKim) btnKim.style.display = 'none';
                         }
-
                         loginOverlay.style.opacity = '0';
                         setTimeout(() => {
                             loginOverlay.style.display = 'none';
