@@ -13,75 +13,99 @@
         *::-webkit-scrollbar { display: none; }
 
         body, html { 
-            height: 100dvh; 
-            margin: 0;
-            overflow: hidden; 
-            width: 100%; 
-            background-color: #f1f5f9;
-            display: flex;
-            flex-direction: column;
+            height: 100dvh; margin: 0; overflow: hidden; width: 100%;
+            background-color: #f1f5f9; display: flex; flex-direction: column;
         }
 
         #sidebar {
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
-            overflow-y: auto;
-            overflow-x: hidden;
-            white-space: nowrap;
+            overflow-y: auto; overflow-x: hidden; white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
 
         @media (min-width: 1024px) {
             #sidebar:not(:hover) { width: 70px; }
-            #sidebar:not(:hover) .nav-text, #sidebar:not(:hover) .profile-detail, #sidebar:not(:hover) .chevron { opacity: 0; pointer-events: none; }
+            #sidebar:not(:hover) .nav-text,
+            #sidebar:not(:hover) .profile-detail,
+            #sidebar:not(:hover) .chevron { opacity: 0; pointer-events: none; }
             #sidebar:hover { width: 260px; }
         }
 
-        .sidebar-active { background-color: #f8fafc; color: #2d4a56 !important; border-radius: 9999px 0 0 9999px; font-weight: bold; }
+        .sidebar-active {
+            background-color: #f8fafc; color: #2d4a56 !important;
+            border-radius: 9999px 0 0 9999px; font-weight: bold;
+        }
         
-        #loading-overlay, #login-overlay { position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #loading-overlay, #login-overlay {
+            position: fixed; inset: 0; z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
         #loading-overlay { background: #000; display: none; }
-        #login-overlay { background: #2d4a56; z-index: 11000; transition: opacity 0.5s ease; }
+        #login-overlay   { background: #2d4a56; z-index: 11000; transition: opacity 0.5s ease; }
 
-        .retro-font { font-family: 'Press Start 2P', cursive; }
+        .retro-font    { font-family: 'Press Start 2P', cursive; }
         .mission-start { color: #ff0000; font-size: 1.5rem; text-shadow: 3px 3px #fff; margin-bottom: 25px; animation: pulse 0.15s infinite; }
         .bar-container { width: 300px; height: 20px; border: 3px solid #fff; padding: 2px; background: #222; }
-        .bar-fill { height: 100%; background: linear-gradient(to bottom, #ffcc00, #ff6600); width: 0%; transition: width 0.2s; }
+        .bar-fill      { height: 100%; background: linear-gradient(to bottom, #ffcc00, #ff6600); width: 0%; transition: width 0.2s; }
         
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
-        .page-content { display: none; width: 100%; height: 100%; }
+        .page-content        { display: none; width: 100%; height: 100%; }
         .page-content.active { display: block; }
         
-        main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        main         { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .content-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }
 
-        .pin-input { background: rgba(255, 255, 255, 0.1); border: 2px solid #fff; color: white; text-align: center; font-size: 2rem; letter-spacing: 0.8rem; width: 220px; padding: 15px; border-radius: 15px; outline: none; }
+        .pin-input { background: rgba(255,255,255,0.1); border: 2px solid #fff; color: white; text-align: center; font-size: 2rem; letter-spacing: 0.8rem; width: 220px; padding: 15px; border-radius: 15px; outline: none; }
         .pin-input:disabled { opacity: 0.5; cursor: not-allowed; }
-        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(0,0,0,0.1); }
+
+        .submenu      { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(0,0,0,0.1); }
         .submenu.show { max-height: 350px; }
-        .chevron { transition: transform 0.3s ease; }
-        .rotate-180 { transform: rotate(180deg); }
+        .chevron      { transition: transform 0.3s ease; }
+        .rotate-180   { transform: rotate(180deg); }
 
         iframe { border: none; width: 100%; height: 100%; }
+
+        /* ── RATING BINTANG ── */
+        .star-filled { color: #f59e0b; }
+        .star-half   { position: relative; display: inline-block; }
+        .star-half::after {
+            content: '\2605'; position: absolute; left: 0; top: 0;
+            width: 50%; overflow: hidden; color: #f59e0b;
+        }
+        .star-empty  { color: #cbd5e1; }
+
+        .rating-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 999px; padding: 2px 10px;
+            font-size: 10px; color: #f59e0b; font-weight: bold; white-space: nowrap;
+        }
     </style>
 </head>
 <body class="font-sans">
+
+    <!-- ═══════════════ LOGIN OVERLAY ═══════════════ -->
     <div id="login-overlay">
         <div class="text-center p-8 bg-black/20 rounded-3xl backdrop-blur-md border border-white/10 mx-4">
             <i class="fas fa-shield-alt text-5xl text-yellow-500 mb-6"></i>
             <h2 class="retro-font text-white text-[10px] mb-8 tracking-widest">SECURE LOGIN</h2>
-            <!-- PIN dinonaktifkan dulu sampai GPS resolved (FIX BUG 1) -->
-            <input type="password" id="pin-field" class="pin-input mb-4" placeholder="****" maxlength="4" inputmode="numeric" disabled>
+            <input type="password" id="pin-field" class="pin-input mb-4" placeholder="****"
+                   maxlength="4" inputmode="numeric" disabled>
             <p class="text-[10px] text-red-400 font-bold uppercase">hidupkan GPS</p>
             <p id="gps-status" class="text-[10px] text-yellow-500 font-bold uppercase animate-pulse">Detecting Location...</p>
             <p id="login-error" class="text-orange-400 text-[8px] retro-font hidden mt-4">ACCESS DENIED</p>
         </div>
     </div>
+
+    <!-- ═══════════════ LOADING OVERLAY ═══════════════ -->
     <div id="loading-overlay">
         <h2 id="loading-title" class="retro-font mission-start">MISSION START !</h2>
         <div class="bar-container"><div id="progress-fill" class="bar-fill"></div></div>
         <p id="loading-status" class="retro-font text-[9px] text-yellow-500 mt-5 text-center uppercase">INITIALIZING...</p>
     </div>
+
+    <!-- ═══════════════ MOBILE HEADER ═══════════════ -->
     <header class="lg:hidden bg-[#2d4a56] text-white p-4 flex justify-between items-center shadow-md z-[60] relative">
         <button onclick="toggleSidebarMobile()" class="text-2xl p-2"><i class="fas fa-bars"></i></button>
         <span class="font-bold text-xs tracking-widest uppercase">IKP Monitoring</span>
@@ -90,19 +114,21 @@
 
     <div class="flex flex-1 relative overflow-hidden">
 
+        <!-- ═══════════════ SIDEBAR ═══════════════ -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 bg-[#2d4a56] text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 flex flex-col flex-shrink-0 shadow-xl pb-14">
             <div class="p-4 flex items-center mt-2">
-                <div class="min-w-[40px]"><img src="https://ui-avatars.com/api/?name=I&background=fbbf24&color=000" class="w-10 h-10 rounded-full"></div>
+                <div class="min-w-[40px]">
+                    <img src="https://ui-avatars.com/api/?name=I&background=fbbf24&color=000" class="w-10 h-10 rounded-full">
+                </div>
                 <div class="ml-4 profile-detail">
-                    <h3 id="user-display-name" class="font-semibold text-sm uppercase">Monitoring IKP</h3>
-                    <p class="text-[10px] text-yellow-500 font-bold uppercase">IP Address</p>
-                    <p id="user-role-display" class="text-[10px] text-yellow-500 font-bold uppercase">Mendeteksi IP...</p>
+                    <h3 id="user-display-name" class="font-semibold text-sm uppercase">Monitoring</h3>
+                    <!-- Menampilkan IP address setelah login -->
+                    <p id="user-ip-display" class="text-[10px] text-yellow-500 font-bold">Mendeteksi IP...</p>
                 </div>
             </div>
             <hr class="border-white/10 my-4">
             <nav class="flex-1 ml-3 overflow-y-auto">
                 <ul class="space-y-2">
-                    <!-- data-allowed: daftar role yang boleh melihat menu ini -->
                     <li data-allowed="admin">
                         <button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-3 text-sm text-left">
                             <i class="fas fa-th-large min-w-[30px] text-center"></i>
@@ -115,13 +141,13 @@
                             <span class="ml-4 nav-text">Pustaka</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu">
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('buletin')" id="btn-buletin" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-book min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Buletin</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu">
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('orders')" id="btn-orders" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-hashtag min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Media Sosial</span>
@@ -133,34 +159,34 @@
                             <span class="ml-4 nav-text">Siaran Pers</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu">
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('reporting')" id="btn-reporting" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-bullhorn min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Publikasi</span>
                         </button>
                     </li>
                     <li>
-                        <button onclick="toggleSubmenu('sdm-sub', 'sdm-chevron')" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
+                        <button onclick="toggleSubmenu('sdm-sub','sdm-chevron')" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-users-cog min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text flex-1">Monev SDM</span>
                             <i id="sdm-chevron" class="fas fa-chevron-down text-[10px] mr-4 chevron"></i>
                         </button>
                         <ul id="sdm-sub" class="submenu pl-8 mt-1 space-y-1">
-                            <li data-allowed="admin,manager,asisten,staf,tamu">
+                            <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                                 <button onclick="showPage('sdm_internal')" id="btn-sdm_internal" class="w-full text-left p-2 text-xs text-gray-400 hover:text-white transition rounded-l-full">• Internal</button>
                             </li>
-                            <li data-allowed="admin,manager,asisten,staf,tamu">
+                            <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                                 <button onclick="showPage('sdm_ahli')" id="btn-sdm_ahli" class="w-full text-left p-2 text-xs text-gray-400 hover:text-white transition rounded-l-full">• Tenaga Ahli</button>
                             </li>
                         </ul>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu">
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('kim')" id="btn-kim" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-network-wired min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">KIM</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu">
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('ai_tools')" id="btn-ai_tools" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-robot min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Tool AI</span>
@@ -184,146 +210,127 @@
 
         <div id="overlay" onclick="toggleSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
 
+        <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
         <main class="bg-white">
             <div class="content-area">
 
-                <!-- Dashboard -->
+                <!-- ── DASHBOARD (dengan rating) ── -->
                 <div id="view-dashboard" class="page-content active p-6 lg:p-10">
                     <div class="max-w-7xl mx-auto">
-                        <h1 class="text-2xl font-bold text-slate-800 mb-8">Dashboard Agregat</h1>
-                        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Siaran Pers</p><h4 class="text-3xl font-black text-slate-700">5.483</h4></div>
-                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Media Sosial</p><h4 class="text-3xl font-black text-slate-700">2.859</h4></div>
-                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Capaian</p><h4 class="text-3xl font-black text-green-600">92%</h4></div>
-                            <div class="bg-red-50 p-6 rounded-2xl border border-red-100 shadow-sm"><p class="text-[10px] text-red-400 font-bold uppercase mb-1">Peliputan</p><h4 class="text-3xl font-black text-red-600">38</h4></div>
+                        <h1 class="text-2xl font-bold text-slate-800 mb-8">Dashboard Kinerja Bidang IKP</h1>
+
+                        <!-- Statistik Agregat -->
+                        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Siaran Pers</p>
+                                <h4 class="text-3xl font-black text-slate-700">5.483</h4>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Media Sosial</p>
+                                <h4 class="text-3xl font-black text-slate-700">2.859</h4>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Capaian</p>
+                                <h4 class="text-3xl font-black text-green-600">92%</h4>
+                            </div>
+                            <div class="bg-red-50 p-6 rounded-2xl border border-red-100 shadow-sm">
+                                <p class="text-[10px] text-red-400 font-bold uppercase mb-1">Peliputan</p>
+                                <h4 class="text-3xl font-black text-red-600">38</h4>
+                            </div>
                         </div>
+
+                        <!-- Kartu Rating Pengguna -->
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-800">Capaian Aktivitas Anda</h2>
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold mt-1">30 hari terakhir</p>
+                                </div>
+                                <div class="rating-badge">
+                                    <span>&#9733;</span>
+                                    <span id="rating-badge-nilai">–</span>
+                                </div>
+                            </div>
+
+                            <!-- Bintang besar + skor numerik -->
+                            <div class="flex flex-col items-center py-6 border-b border-slate-100 mb-6">
+                                <div id="rating-bintang" class="text-4xl tracking-widest mb-3">
+                                    <span class="star-empty">&#9733;</span>
+                                    <span class="star-empty">&#9733;</span>
+                                    <span class="star-empty">&#9733;</span>
+                                    <span class="star-empty">&#9733;</span>
+                                    <span class="star-empty">&#9733;</span>
+                                </div>
+                                <p class="text-slate-400 text-xs uppercase font-bold">Skor Aktivitas</p>
+                                <p id="rating-angka" class="text-5xl font-black text-slate-800 mt-1">–</p>
+                                <p class="text-slate-400 text-[10px] mt-1">dari skala 5.0</p>
+                            </div>
+
+                            <!-- Label & deskripsi level -->
+                            <div class="flex items-start gap-4">
+                                <div id="rating-ikon" class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-100">
+                                    <i class="fas fa-hourglass-half text-slate-400"></i>
+                                </div>
+                                <div>
+                                    <p id="rating-label" class="font-bold text-slate-700 text-sm">Menunggu Data</p>
+                                    <p id="rating-deskripsi" class="text-slate-500 text-[11px] mt-1 leading-relaxed">
+                                        Rating dihitung dari frekuensi login dan intensitas penggunaan menu
+                                        dalam 30 hari terakhir. Data muncul setelah kalkulasi harian berjalan.
+                                    </p>
+                                </div>
+                            </div>
+                        </div><!-- /kartu rating -->
+
                     </div>
                 </div>
 
+                <!-- ── AI TOOLS ── -->
                 <div id="view-ai_tools" class="page-content p-6 lg:p-10">
                     <div class="max-w-6xl mx-auto">
                         <h1 class="text-2xl font-bold text-slate-800 mb-8">Artificial Intelligence Tools</h1>
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-newspaper text-2xl text-blue-500 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Berita</h3>
-                                <button onclick="window.open('https://gemini.google.com/share/ad8ac373e1e4', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-user-astronaut text-2xl text-orange-500 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Karakter</h3>
-                                <button onclick="window.open('https://gemini.google.com/share/ff7bbbb86f04', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-walking text-2xl text-green-500 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Pose</h3>
-                                <button onclick="window.open('https://gemini.google.com/share/eced4fa76cdc', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-th-list text-2xl text-purple-500 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Storyboard</h3>
-                                <button onclick="window.open('https://gemini.google.com/share/0872d7597209', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-microphone-alt text-2xl text-red-500 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">VoiceOver</h3>
-                                <button onclick="window.open('https://gemini.google.com/share/d4b2a0764f35', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button>
-                            </div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-newspaper text-2xl text-blue-500 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Berita</h3><button onclick="window.open('https://gemini.google.com/share/ad8ac373e1e4','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-user-astronaut text-2xl text-orange-500 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Karakter</h3><button onclick="window.open('https://gemini.google.com/share/ff7bbbb86f04','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-walking text-2xl text-green-500 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Pose</h3><button onclick="window.open('https://gemini.google.com/share/eced4fa76cdc','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-th-list text-2xl text-purple-500 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Storyboard</h3><button onclick="window.open('https://gemini.google.com/share/0872d7597209','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-microphone-alt text-2xl text-red-500 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">VoiceOver</h3><button onclick="window.open('https://gemini.google.com/share/d4b2a0764f35','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Link</button></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- ── PORTAL INPUT ── -->
                 <div id="view-portal" class="page-content p-6 lg:p-10">
                     <div class="max-w-6xl mx-auto">
                         <h1 class="text-2xl font-bold text-slate-800 mb-8">Portal Input Data</h1>
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-file-signature text-2xl text-blue-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Dokumen IKP</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-bullhorn text-2xl text-yellow-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Diseminasi</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-upload text-2xl text-green-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Publikasi</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeMcE7aO_ZEL22QKgnL2LL-zrXTRYn0Ly0f0chDQWMWhEf5_Q/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-book-open text-2xl text-purple-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Buletin</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfWk9j3R_A_lfNgvELwqnkUwkQ25-Dw5JJM4pD9nMUtDCC4CQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-newspaper text-2xl text-red-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Siaran Pers</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-handshake text-2xl text-slate-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Kemitraan KIE</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-calendar-check text-2xl text-red-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Agenda</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-info-circle text-2xl text-blue-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Monev PPID</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-search-location text-2xl text-orange-500 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Berita Kehilangan</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-broadcast-tower text-2xl text-green-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Siaran Radio</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-wrench text-2xl text-orange-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Pemeliharaan Alat</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-microphone-alt text-2xl text-red-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Podcast</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-photo-video text-2xl text-indigo-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Penayangan Videotron</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-trophy text-2xl text-yellow-500 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Penghargaan</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100">
-                                <i class="fas fa-box-open text-2xl text-teal-600 mb-4"></i>
-                                <h3 class="font-bold mb-4 text-slate-700 text-xs">Aset Digital</h3>
-                                <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform', '_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button>
-                            </div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-file-signature text-2xl text-blue-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Dokumen IKP</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfoi6eC8URZGD02YcwLlqAPueGnFBUKnwqGVhpkj_OZ-v6CPQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-bullhorn text-2xl text-yellow-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Diseminasi</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf4Xjub4lVckziVqj1ZeZc18uBx_zIYXIih1q0RdijbCQ5weQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-upload text-2xl text-green-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Publikasi</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeMcE7aO_ZEL22QKgnL2LL-zrXTRYn0Ly0f0chDQWMWhEf5_Q/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-book-open text-2xl text-purple-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Buletin</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfWk9j3R_A_lfNgvELwqnkUwkQ25-Dw5JJM4pD9nMUtDCC4CQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-newspaper text-2xl text-red-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Siaran Pers</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-handshake text-2xl text-slate-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Kemitraan KIE</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-calendar-check text-2xl text-red-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Agenda</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-info-circle text-2xl text-blue-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Monev PPID</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-search-location text-2xl text-orange-500 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Berita Kehilangan</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-broadcast-tower text-2xl text-green-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Siaran Radio</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-wrench text-2xl text-orange-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Pemeliharaan Alat</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-microphone-alt text-2xl text-red-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Podcast</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-photo-video text-2xl text-indigo-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Penayangan Videotron</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-trophy text-2xl text-yellow-500 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Penghargaan</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
+                            <div class="bg-white p-6 rounded-2xl text-center shadow-sm border border-slate-100"><i class="fas fa-box-open text-2xl text-teal-600 mb-4"></i><h3 class="font-bold mb-4 text-slate-700 text-xs">Aset Digital</h3><button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSctLSI6Ls7_a2c9hAUkgLZFhNdvpbLWodjsf4wZCeXmrqOkJQ/viewform','_blank')" class="w-full py-3 bg-[#2d4a56] text-white rounded-xl text-[10px]">Buka Form</button></div>
                         </div>
                     </div>
                 </div>
 
-                <div id="view-sdm_internal"  class="page-content h-full"></div>
-                <div id="view-sdm_ahli"      class="page-content h-full"></div>
-                <div id="view-inventory"     class="page-content h-full"></div>
-                <div id="view-buletin"       class="page-content h-full"></div>
-                <div id="view-orders"        class="page-content h-full"></div>
-                <div id="view-purchase"      class="page-content h-full"></div>
-                <div id="view-reporting"     class="page-content h-full"></div>
-                <div id="view-kim"           class="page-content h-full"></div>
+                <!-- Iframe views (lazy-loaded) -->
+                <div id="view-sdm_internal" class="page-content h-full"></div>
+                <div id="view-sdm_ahli"     class="page-content h-full"></div>
+                <div id="view-inventory"    class="page-content h-full"></div>
+                <div id="view-buletin"      class="page-content h-full"></div>
+                <div id="view-orders"       class="page-content h-full"></div>
+                <div id="view-purchase"     class="page-content h-full"></div>
+                <div id="view-reporting"    class="page-content h-full"></div>
+                <div id="view-kim"          class="page-content h-full"></div>
 
             </div>
 
@@ -347,69 +354,54 @@
             kim          : 'https://script.google.com/macros/s/AKfycbzwK8xUB_nbTvv5khgAjp4EeYzXp3BoeQkFEtTKiWtdR_508QtMihN5SxUFuYyBSfajag/exec'
         };
 
-        window.currentUser = {
-            nama     : "",
-            role     : "",
-            ip       : "",       
-            location : "GPS Pending"
-        };
+        // ── STATE GLOBAL ─────────────────────────────────────────────────
+        window.currentUser = { nama: "", role: "", ip: "", location: "GPS Pending", rating: 0 };
+        const deviceInfo   = navigator.userAgent;
 
-        const deviceInfo = navigator.userAgent;
+        // ── FUNGSI: AMBIL IP PUBLIK (multi-provider) ──────────────────────
         async function getPublicIP() {
             const providers = [
                 { url: 'https://api.ipify.org?format=json',  key: 'ip'        },
                 { url: 'https://ipinfo.io/json',              key: 'ip'        },
                 { url: 'https://api.db-ip.com/v2/free/self', key: 'ipAddress' }
             ];
-            for (const provider of providers) {
+            for (const p of providers) {
                 try {
-                    const res  = await fetch(provider.url, { signal: AbortSignal.timeout(5000) });
+                    const res  = await fetch(p.url, { signal: AbortSignal.timeout(5000) });
                     const data = await res.json();
-                    const ip   = data[provider.key];
+                    const ip   = data[p.key];
                     if (ip) return ip;
-                } catch (e) {
-                    console.warn("IP provider gagal, mencoba cadangan:", provider.url);
-                }
+                } catch(e) { console.warn("IP provider gagal:", p.url); }
             }
-
             throw new Error("Gagal memvalidasi IP Address. Periksa koneksi internet Anda.");
         }
 
+        // ── FUNGSI: AMBIL GPS (Promise-based, selalu resolve) ─────────────
         function resolveGPS() {
             return new Promise((resolve) => {
                 const gpsEl = document.getElementById('gps-status');
-
                 if (!navigator.geolocation) {
                     window.currentUser.location = "GPS Tidak Didukung";
-                    gpsEl.innerText   = "GPS TIDAK DIDUKUNG";
-                    gpsEl.className   = "text-[10px] text-red-400 font-bold uppercase";
-                    resolve();
-                    return;
+                    gpsEl.innerText = "GPS TIDAK DIDUKUNG"; gpsEl.className = "text-[10px] text-red-400 font-bold uppercase";
+                    return resolve();
                 }
-
-                // Timeout manual 10 detik — jika GPS terlalu lama, tetap lanjut
-                const fallbackTimer = setTimeout(() => {
+                const fallback = setTimeout(() => {
                     window.currentUser.location = "GPS Timeout";
-                    gpsEl.innerText = "GPS BYPASSED (TIMEOUT)";
-                    gpsEl.className = "text-[10px] text-yellow-400 font-bold uppercase";
+                    gpsEl.innerText = "GPS BYPASSED (TIMEOUT)"; gpsEl.className = "text-[10px] text-yellow-400 font-bold uppercase";
                     resolve();
                 }, 10000);
-
                 navigator.geolocation.getCurrentPosition(
                     (pos) => {
-                        clearTimeout(fallbackTimer);
-                        const coords = `${pos.coords.latitude},${pos.coords.longitude}`;
-                        window.currentUser.location = coords;
-                        gpsEl.innerText = "GPS LOCKED ✓";
-                        gpsEl.className = "text-[10px] text-green-400 font-bold uppercase";
+                        clearTimeout(fallback);
+                        window.currentUser.location = `${pos.coords.latitude},${pos.coords.longitude}`;
+                        gpsEl.innerText = "GPS LOCKED ✓"; gpsEl.className = "text-[10px] text-green-400 font-bold uppercase";
                         resolve();
                     },
-                    (err) => {
-                        clearTimeout(fallbackTimer);
+                    () => {
+                        clearTimeout(fallback);
                         window.currentUser.location = "GPS Denied/Off";
-                        gpsEl.innerText = "GPS BYPASSED (READY)";
-                        gpsEl.className = "text-[10px] text-yellow-500 font-bold uppercase";
-                        resolve(); // Tetap resolve — GPS off bukan error fatal
+                        gpsEl.innerText = "GPS BYPASSED (READY)"; gpsEl.className = "text-[10px] text-yellow-500 font-bold uppercase";
+                        resolve();
                     },
                     { enableHighAccuracy: true, timeout: 9000 }
                 );
@@ -417,25 +409,51 @@
         }
 
         function applyRoleAccess(role) {
-            const menuItems = document.querySelectorAll('li[data-allowed]');
-            menuItems.forEach(item => {
+            document.querySelectorAll('li[data-allowed]').forEach(item => {
                 const allowed = item.getAttribute('data-allowed').split(',').map(r => r.trim());
                 item.style.display = allowed.includes(role) ? '' : 'none';
             });
         }
 
+        function tampilkanRating(nilaiRating) {
+            var rating = parseFloat(nilaiRating) || 0;
 
+            // Render bintang
+            var htmlBintang = "";
+            for (var i = 1; i <= 5; i++) {
+                if (rating >= i)           htmlBintang += '<span class="star-filled">&#9733;</span>';
+                else if (rating >= i - 0.5) htmlBintang += '<span class="star-half text-slate-200">&#9733;</span>';
+                else                        htmlBintang += '<span class="star-empty">&#9733;</span>';
+            }
+            document.getElementById('rating-bintang').innerHTML     = htmlBintang;
+            document.getElementById('rating-angka').innerText        = rating.toFixed(1);
+            document.getElementById('rating-badge-nilai').innerText  = rating.toFixed(1);
+
+            // Level berdasarkan skor
+            var ikon, warna, label, desk;
+            if      (rating >= 4.5) { ikon = "fas fa-star text-yellow-500";          warna = "bg-yellow-50";  label = "Luar Biasa";           desk = "Aktivitas Anda sangat konsisten dan intensif. Pertahankan semangat ini!"; }
+            else if (rating >= 3.5) { ikon = "fas fa-thumbs-up text-blue-500";       warna = "bg-blue-50";    label = "Baik";                  desk = "Frekuensi login dan penggunaan menu berada di atas rata-rata. Terus tingkatkan!"; }
+            else if (rating >= 2.5) { ikon = "fas fa-chart-line text-green-500";     warna = "bg-green-50";   label = "Cukup";                 desk = "Aktivitas cukup baik. Tingkatkan konsistensi login untuk skor lebih tinggi."; }
+            else if (rating >= 1.0) { ikon = "fas fa-exclamation-circle text-orange-400"; warna = "bg-orange-50"; label = "Perlu Ditingkatkan"; desk = "Aktivitas masih rendah. Coba login lebih rutin dan gunakan lebih banyak fitur."; }
+            else                    { ikon = "fas fa-hourglass-half text-slate-400"; warna = "bg-slate-100";  label = "Belum Ada Data";        desk = "Rating akan terhitung setelah aktif menggunakan sistem. Mulai eksplorasi sekarang!"; }
+
+            var ikonEl = document.getElementById('rating-ikon');
+            ikonEl.className  = "w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 " + warna;
+            ikonEl.innerHTML  = '<i class="' + ikon + '"></i>';
+            document.getElementById('rating-label').innerText      = label;
+            document.getElementById('rating-deskripsi').innerText  = desk;
+        }
+
+        // ── INISIALISASI: GPS dulu, baru aktifkan PIN ─────────────────────
         window.addEventListener('DOMContentLoaded', async () => {
             const pinField = document.getElementById('pin-field');
-            pinField.disabled = true; // Pastikan disable selama GPS belum selesai
-
-            await resolveGPS(); // Tunggu GPS selesai (sukses/gagal/timeout)
-
-            // GPS sudah resolved — aktifkan PIN
+            pinField.disabled = true;
+            await resolveGPS();
             pinField.disabled = false;
             pinField.focus();
         });
 
+        // ── LOGIN HANDLER (full async) ────────────────────────────────────
         document.getElementById('pin-field').addEventListener('input', async (e) => {
             const pin = e.target.value;
             if (pin.length !== 4) return;
@@ -443,27 +461,22 @@
             const pinField   = e.target;
             const loginError = document.getElementById('login-error');
 
-
-            pinField.disabled = true;
+            pinField.disabled    = true;
             loginError.innerText = "VERIFYING...";
             loginError.classList.remove('hidden');
-
             showLoading("Memverifikasi Keamanan & PIN...");
 
             try {
-
+                // Ambil IP nyata (FIX BUG 3: await langsung, bukan di dalam callback)
                 const ip = await getPublicIP();
-
-
-                window.currentUser.ip = ip;
-
+                window.currentUser.ip = ip; // simpan ke state (FIX BUG 2)
 
                 const response = await fetch(AUTH_API_URL, {
                     method : 'POST',
                     body   : JSON.stringify({
                         pin      : pin,
-                        ip       : ip,                          
-                        location : window.currentUser.location, 
+                        ip       : ip,
+                        location : window.currentUser.location,
                         device   : deviceInfo
                     })
                 });
@@ -471,22 +484,26 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
- 
-                    window.currentUser.nama = result.nama;
-                    window.currentUser.role = result.role ? result.role.toLowerCase() : "tamu";
+                    // Simpan semua data user ke state global
+                    window.currentUser.nama   = result.nama;
+                    window.currentUser.role   = result.role   ? result.role.toLowerCase() : "tamu";
+                    window.currentUser.rating = result.rating !== undefined ? parseFloat(result.rating) : 0;
 
-
+                    // Terapkan RBAC
                     applyRoleAccess(window.currentUser.role);
 
-      
-                    document.getElementById('user-display-name').innerText  = result.nama;
-                    document.getElementById('user-role-display').innerText = window.currentUser.ip;
+                    // Update sidebar
+                    document.getElementById('user-display-name').innerText = result.nama;
+                    document.getElementById('user-ip-display').innerText   = window.currentUser.ip;
 
+                    // Render rating di dashboard
+                    tampilkanRating(window.currentUser.rating);
 
-                    const loginOverlay = document.getElementById('login-overlay');
-                    loginOverlay.style.opacity = '0';
+                    // Tutup login overlay
+                    const overlay = document.getElementById('login-overlay');
+                    overlay.style.opacity = '0';
                     setTimeout(() => {
-                        loginOverlay.style.display = 'none';
+                        overlay.style.display = 'none';
                         hideLoading();
                         showPage('dashboard');
                     }, 500);
@@ -494,52 +511,39 @@
                     loginError.classList.add('hidden');
 
                 } else {
-
                     hideLoading();
                     showError("ACCESS DENIED — PIN SALAH");
                 }
 
-            } catch (err) {
-
+            } catch(err) {
                 hideLoading();
                 showError("KEAMANAN GAGAL: " + err.message);
             }
         });
 
-
         function showPage(id) {
-            // Switch tampilan konten
             document.querySelectorAll('.page-content').forEach(v => v.classList.remove('active'));
             const target = document.getElementById('view-' + id);
 
             if (target) {
                 target.classList.add('active');
-
-                // Lazy-load iframe — hanya dibuat jika belum ada & ada URL-nya
                 if (!target.querySelector('iframe') && appUrls[id]) {
-                    // Placeholder loading sementara iframe dimuat
                     target.innerHTML = `
                         <div class="flex items-center justify-center h-full flex-col gap-4 bg-slate-50">
                             <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                             <p class="text-slate-500 text-xs font-mono animate-pulse">MEMUAT MODUL ${id.toUpperCase()}...</p>
                         </div>`;
-
                     setTimeout(() => {
-                        target.innerHTML = `
-                            <iframe src="${appUrls[id]}"
-                                    class="w-full h-full border-0 shadow-inner"
-                                    allow="geolocation; microphone; camera">
-                            </iframe>`;
+                        target.innerHTML = `<iframe src="${appUrls[id]}" class="w-full h-full border-0 shadow-inner" allow="geolocation; microphone; camera"></iframe>`;
                     }, 300);
                 }
             }
 
-            // Update button aktif di sidebar
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('sidebar-active'));
             const btn = document.getElementById('btn-' + id);
             if (btn) btn.classList.add('sidebar-active');
 
-
+            // Audit log — kirim IP nyata dari state (FIX BUG 2)
             if (window.currentUser && window.currentUser.nama) {
                 fetch(AUTH_API_URL, {
                     method : 'POST',
@@ -548,26 +552,24 @@
                         action   : "LOG_MENU",
                         nama     : window.currentUser.nama,
                         menu     : id,
-                        location : window.currentUser.location, // GPS nyata
+                        location : window.currentUser.location,
                         device   : deviceInfo,
-                        ip       : window.currentUser.ip        // IP nyata dari state
+                        ip       : window.currentUser.ip       // IP nyata, bukan hardcoded
                     })
                 }).catch(e => console.log("Silent log gagal:", e));
             }
 
-            // Tutup sidebar di mobile
             if (window.innerWidth < 1024) toggleSidebarMobile();
         }
 
-
+        // ── HELPERS ───────────────────────────────────────────────────────
         function showLoading(msg) {
             document.getElementById('loading-status').innerText = msg || "MEMPROSES...";
             document.getElementById('progress-fill').style.width = '0%';
             document.getElementById('loading-overlay').style.display = 'flex';
-            // Animasi progress bar sederhana
             let p = 0;
             window._loadingInterval = setInterval(() => {
-                p = Math.min(p + 3, 90); // Berhenti di 90% — selesai saat fetch done
+                p = Math.min(p + 3, 90);
                 document.getElementById('progress-fill').style.width = p + '%';
             }, 80);
         }
@@ -580,7 +582,6 @@
                 document.getElementById('progress-fill').style.width = '0%';
             }, 300);
         }
-
 
         function showError(msg) {
             const loginError = document.getElementById('login-error');
@@ -595,7 +596,6 @@
             }, 2500);
         }
 
-
         function toggleSidebarMobile() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
             document.getElementById('overlay').classList.toggle('hidden');
@@ -606,9 +606,7 @@
             document.getElementById(chevronId).classList.toggle('rotate-180');
         }
 
-        function handleLogout() {
-            window.location.reload();
-        }
+        function handleLogout() { window.location.reload(); }
     </script>
 </body>
 </html>
