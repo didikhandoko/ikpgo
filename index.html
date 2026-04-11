@@ -432,10 +432,10 @@
             // Level berdasarkan skor
             var ikon, warna, label, desk;
             if      (rating >= 4.5) { ikon = "fas fa-star text-yellow-500";          warna = "bg-yellow-50";  label = "Luar Biasa";           desk = "Aktivitas Anda sangat konsisten dan intensif. Pertahankan semangat ini!"; }
-            else if (rating >= 3.5) { ikon = "fas fa-thumbs-up text-blue-500";       warna = "bg-blue-50";    label = "Baik";                  desk = "Frekuensi login dan penggunaan menu berada di atas rata-rata. Terus tingkatkan!"; }
-            else if (rating >= 2.5) { ikon = "fas fa-chart-line text-green-500";     warna = "bg-green-50";   label = "Cukup";                 desk = "Aktivitas cukup baik. Tingkatkan konsistensi login untuk skor lebih tinggi."; }
-            else if (rating >= 1.0) { ikon = "fas fa-exclamation-circle text-orange-400"; warna = "bg-orange-50"; label = "Perlu Ditingkatkan"; desk = "Aktivitas masih rendah. Coba login lebih rutin dan gunakan lebih banyak fitur."; }
-            else                    { ikon = "fas fa-hourglass-half text-slate-400"; warna = "bg-slate-100";  label = "Belum Ada Data";        desk = "Rating akan terhitung setelah aktif menggunakan sistem. Mulai eksplorasi sekarang!"; }
+            else if (rating >= 3.5) { ikon = "fas fa-thumbs-up text-blue-500";       warna = "bg-blue-50";    label = "Baik";                  desk = "Kinerja sudah berada di atas rata-rata. Terus tingkatkan!"; }
+            else if (rating >= 2.5) { ikon = "fas fa-chart-line text-green-500";     warna = "bg-green-50";   label = "Cukup";                 desk = "Aktivitas cukup baik. Tingkatkan konsistensi kinerja untuk skor lebih tinggi."; }
+            else if (rating >= 1.0) { ikon = "fas fa-exclamation-circle text-orange-400"; warna = "bg-orange-50"; label = "Perlu Ditingkatkan"; desk = "Aktivitas masih rendah. Tingkat kinerjamu sekarang dan jangan lupa isi laporan!"; }
+            else                    { ikon = "fas fa-hourglass-half text-slate-400"; warna = "bg-slate-100";  label = "Belum Ada Data";        desk = "Rating akan terhitung setelah aktif menggunakan sistem. Tingkat kinerjamu sekarang!"; }
 
             var ikonEl = document.getElementById('rating-ikon');
             ikonEl.className  = "w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 " + warna;
