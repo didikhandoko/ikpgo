@@ -181,6 +181,12 @@
                         </ul>
                     </li>
                     <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                        <button onclick="showPage('sp4nlapor')" id="btn-sp4nlapor" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
+                            <i class="fas fa-file-alt min-w-[30px] text-center"></i>
+                            <span class="ml-4 nav-text">SP4N Lapor</span>
+                        </button>
+                    </li>
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('kim')" id="btn-kim" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-network-wired min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">KIM</span>
@@ -331,6 +337,7 @@
                 <div id="view-purchase"     class="page-content h-full"></div>
                 <div id="view-reporting"    class="page-content h-full"></div>
                 <div id="view-kim"          class="page-content h-full"></div>
+                <div id="view-sp4nlapor"    class="page-content h-full"></div>
 
             </div>
 
@@ -351,7 +358,8 @@
             orders       : 'https://script.google.com/macros/s/AKfycbylGzS4xWWvs6pLPIs2T5hMVSe1noCLQEpXo2T1Z79XfaVBH6_OGBo2TvYUwiM-ZqJD/exec',
             purchase     : 'https://script.google.com/macros/s/AKfycbzS5KiI8eJ6kW-SV8jjyIqTXCMSc20El3NEg1yx2dyoMNiq1dRlRV9wuxxGltiWhppK/exec',
             reporting    : 'https://script.google.com/macros/s/AKfycbzNy0C25RI-v0eif-wT22-nwh9BJ3F2qPxbM4OmNCXsjv3qulG0uMprDzbpOCb_Dwsv/exec',
-            kim          : 'https://script.google.com/macros/s/AKfycbzwK8xUB_nbTvv5khgAjp4EeYzXp3BoeQkFEtTKiWtdR_508QtMihN5SxUFuYyBSfajag/exec'
+            kim          : 'https://script.google.com/macros/s/AKfycbzwK8xUB_nbTvv5khgAjp4EeYzXp3BoeQkFEtTKiWtdR_508QtMihN5SxUFuYyBSfajag/exec',
+            sp4nlapor    : 'https://script.google.com/macros/s/AKfycbw4ABOCYnrHYGm3_IW-ufeoEncGVCs0BpYVLZutLRfTVncIyBv-RsMGV88kQXSeodcZ/exec'
         };
 
         // ── STATE GLOBAL ─────────────────────────────────────────────────
@@ -491,6 +499,7 @@
 
                     // Terapkan RBAC
                     applyRoleAccess(window.currentUser.role);
+                    preloadAllEmbeds();
 
                     // Update sidebar
                     document.getElementById('user-display-name').innerText = result.nama;
@@ -607,6 +616,15 @@
         }
 
         function handleLogout() { window.location.reload(); }
+        
+        function preloadAllEmbeds() {
+            Object.entries(appUrls).forEach(([id, url]) => {
+                const target = document.getElementById('view-' + id);
+                if (target && !target.querySelector('iframe')) {
+                    target.innerHTML = `<iframe src="${url}" class="w-full h-full border-0 shadow-inner" allow="geolocation; microphone; camera"></iframe>`;
+                }
+            });
+        }
     </script>
 </body>
 </html>
