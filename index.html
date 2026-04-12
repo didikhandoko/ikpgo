@@ -129,13 +129,13 @@
             <hr class="border-white/10 my-4">
             <nav class="flex-1 ml-3 overflow-y-auto">
                 <ul class="space-y-2">
-                    <li data-allowed="admin">
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-3 text-sm text-left">
                             <i class="fas fa-th-large min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Dashboard</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager">
+                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
                         <button onclick="showPage('inventory')" id="btn-inventory" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-archive min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Pustaka</span>
@@ -165,7 +165,7 @@
                             <span class="ml-4 nav-text">Publikasi</span>
                         </button>
                     </li>
-                    <li>
+                    <li data-allowed="admin,manager,asisten,staf,ob">
                         <button onclick="toggleSubmenu('sdm-sub','sdm-chevron')" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-users-cog min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text flex-1">Monev SDM</span>
