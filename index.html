@@ -386,7 +386,7 @@
                 </div>
 
                 <audio id="radioAudio" preload="none">
-                  <source src="https://jgj.jogjastreamers.com/sinarga?s=02028" type="audio/mpeg" />
+                  <source src="https://jgj.jogjastreamers.com/sinarga?s=09932" type="audio/mpeg" />
                 </audio>
 
                 <script>
@@ -394,7 +394,7 @@
                 var playing = false;
 
                 function startPlay() {
-                  audio.src = 'https://jgj.jogjastreamers.com/sinarga?s=02028';
+                  audio.src = 'https://jgj.jogjastreamers.com/sinarga?s=09932';
                   audio.load();
                   audio.play().catch(function(){});
                   playing = true;
@@ -650,7 +650,11 @@
                 }).catch(e => console.log("Silent log gagal:", e));
             }
 
-            if (window.innerWidth < 1024) toggleSidebarMobile();
+            if (window.innerWidth < 1024) {
+                const sidebar = document.getElementById('sidebar');
+                const isOpen = !sidebar.classList.contains('-translate-x-full');
+                if (isOpen) toggleSidebarMobile(); // tutup hanya jika sedang terbuka
+            }
         }
 
         // ── HELPERS ───────────────────────────────────────────────────────
