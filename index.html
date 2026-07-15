@@ -129,13 +129,13 @@
             <hr class="border-white/10 my-4">
             <nav class="flex-1 ml-3 overflow-y-auto">
                 <ul class="space-y-2">
-                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                    <li data-allowed="admin,manager,asisten,staf,ob">
                         <button onclick="showPage('dashboard')" id="btn-dashboard" class="sidebar-active w-full flex items-center p-3 text-sm text-left">
                             <i class="fas fa-th-large min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Dashboard</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                    <li data-allowed="admin,manager,asisten,staf,ob">
                         <button onclick="showPage('inventory')" id="btn-inventory" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-archive min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Pustaka</span>
@@ -165,40 +165,40 @@
                             <span class="ml-4 nav-text">Publikasi</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,ob">
+                    <li data-allowed="admin,manager,asisten,ob">
                         <button onclick="toggleSubmenu('sdm-sub','sdm-chevron')" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-users-cog min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text flex-1">Monev SDM</span>
                             <i id="sdm-chevron" class="fas fa-chevron-down text-[10px] mr-4 chevron"></i>
                         </button>
                         <ul id="sdm-sub" class="submenu pl-8 mt-1 space-y-1">
-                            <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                            <li data-allowed="admin,manager,asisten,staf,ob">
                                 <button onclick="showPage('sdm_internal')" id="btn-sdm_internal" class="w-full text-left p-2 text-xs text-gray-400 hover:text-white transition rounded-l-full">• Internal</button>
                             </li>
-                            <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                            <li data-allowed="admin,manager,asisten,staf,ob">
                                 <button onclick="showPage('sdm_ahli')" id="btn-sdm_ahli" class="w-full text-left p-2 text-xs text-gray-400 hover:text-white transition rounded-l-full">• Tenaga Ahli</button>
                             </li>
                         </ul>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                    <li data-allowed="admin,manager,asisten,staf,ob">
                         <button onclick="showPage('sp4nlapor')" id="btn-sp4nlapor" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-file-alt min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">SP4N Lapor</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                    <li data-allowed="admin,manager,asisten,staf,ob">
                         <button onclick="showPage('kim')" id="btn-kim" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-network-wired min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">KIM</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                    <li data-allowed="admin,manager,asisten,staf,ob">
                         <button onclick="showPage('ai_tools')" id="btn-ai_tools" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-robot min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Tool AI</span>
                         </button>
                     </li>
-                    <li data-allowed="admin,manager,asisten,staf,tamu,ob">
+                    <li data-allowed="admin,manager,asisten,staf,ob">
                         <button onclick="showPage('portal')" id="btn-portal" class="w-full flex items-center p-3 text-gray-300 hover:bg-white/10 rounded-l-full text-sm text-left">
                             <i class="fas fa-door-open min-w-[30px] text-center"></i>
                             <span class="ml-4 nav-text">Portal Input</span>
